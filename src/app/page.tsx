@@ -40,7 +40,7 @@ function Preview() {
         <div className="grid gap-5 p-6 text-left sm:grid-cols-[1.4fr_1fr] sm:p-8">
           <div>
             <p className="text-xs uppercase tracking-widest text-muted-foreground">Saturday, 17 October</p>
-            <p className="mt-1 font-heading text-4xl leading-none sm:text-5xl">Good morning, <em>Tonmoy</em></p>
+            <p className="mt-1 font-heading text-4xl leading-none sm:text-5xl">Good morning, <em>Jane Doe</em></p>
             <div className="mt-6 grid grid-cols-3 gap-3">
               {[["4", "Due today"], ["2/3", "Habits"], ["68%", "Goal"]].map(([n, l]) => (
                 <div key={l} className="rounded-2xl border bg-background/70 p-3"><p className="font-heading text-3xl leading-none">{n}</p><p className="mt-1 text-xs text-muted-foreground">{l}</p></div>
