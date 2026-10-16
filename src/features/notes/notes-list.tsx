@@ -59,7 +59,7 @@ export function NotesList({ notes, tags, q: initialQ, tag, archived }: { notes: 
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {notes.map((n) => (
-            <li key={n.id} className="group relative rounded-2xl border bg-card transition-colors hover:border-ring/50">
+            <li key={n.id} className="group relative rounded-3xl border bg-card transition-colors hover:border-ring/50">
               <Link href={`/notes/${n.id}`} className="block p-4 pb-3 outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-2xl">
                 <h2 className="line-clamp-1 pr-14 text-base font-semibold">{n.pinned && <Pin className="mr-1 inline size-3.5 text-primary" aria-label="Pinned" />}{n.title || "Untitled note"}</h2>
                 <p className="mt-1 line-clamp-3 min-h-12 text-sm text-muted-foreground">{excerpt(n.body) || "Empty note"}</p>

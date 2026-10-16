@@ -19,8 +19,8 @@ export default function HelpPage() {
     <>
       <PageHeader title="Help" description="Quick answers and the shortcuts that make Life OS fast." />
       <div className="grid max-w-3xl gap-6">
-        <section aria-labelledby="h-start" className="rounded-2xl border bg-card p-5">
-          <h2 id="h-start" className="text-xl font-semibold">Getting started</h2>
+        <section aria-labelledby="h-start" className="rounded-3xl border bg-card p-5">
+          <h2 id="h-start" className="text-2xl">Getting started</h2>
           <ol className="mt-3 grid list-decimal gap-1.5 pl-5 text-sm">
             <li>Press <kbd className="rounded border bg-muted px-1 font-mono text-xs">t</kbd> to add a task, or use <strong>Add</strong> in the top bar for events, notes, transactions, habits, projects and goals.</li>
             <li>Open <Link className="underline" href="/today">Today</Link> each morning: overdue work, today’s tasks, events and habits in one view.</li>
@@ -28,16 +28,16 @@ export default function HelpPage() {
             <li>Set a budget in <Link className="underline" href="/finance">Finance</Link> and watch it fill from the expenses you record.</li>
           </ol>
         </section>
-        <section aria-labelledby="h-keys" className="rounded-2xl border bg-card p-5">
-          <h2 id="h-keys" className="text-xl font-semibold">Keyboard shortcuts</h2>
+        <section aria-labelledby="h-keys" className="rounded-3xl border bg-card p-5">
+          <h2 id="h-keys" className="text-2xl">Keyboard shortcuts</h2>
           <dl className="mt-3 grid gap-1.5 text-sm sm:grid-cols-2">
             {[["⌘K / Ctrl+K or /", "Search & commands"], ["t", "New task"], ["e", "New event"], ["g then d/t/c/h/l/p/n/f/a/s", "Go to a section"], ["[", "Collapse sidebar"], ["?", "Shortcut list"]].map(([k, v]) => (
               <div key={k} className="flex items-center justify-between gap-3"><dt className="text-muted-foreground">{v}</dt><dd><kbd className="rounded border bg-muted px-1.5 py-0.5 font-mono text-xs">{k}</kbd></dd></div>
             ))}
           </dl>
         </section>
-        <section aria-labelledby="h-faq" className="rounded-2xl border bg-card p-5">
-          <h2 id="h-faq" className="text-xl font-semibold">FAQ</h2>
+        <section aria-labelledby="h-faq" className="rounded-3xl border bg-card p-5">
+          <h2 id="h-faq" className="text-2xl">FAQ</h2>
           <div className="mt-2 divide-y">
             {FAQ.map(([q, a]) => (
               <details key={q} className="group py-3"><summary className="cursor-pointer text-sm font-medium">{q}</summary><p className="mt-2 text-sm text-muted-foreground">{a}</p></details>

@@ -67,8 +67,8 @@ export function SettingsForm({ profile, widgets }: { profile: Profile; widgets: 
 
   return (
     <form onSubmit={save} className="grid gap-6" noValidate>
-      <section aria-labelledby="st-profile" className="grid gap-4 rounded-2xl border bg-card p-5">
-        <h2 id="st-profile" className="text-xl font-semibold">Profile & preferences</h2>
+      <section aria-labelledby="st-profile" className="grid gap-4 rounded-3xl border bg-card p-5">
+        <h2 id="st-profile" className="text-2xl">Profile & preferences</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field id="st-name" label="Display name" error={errors.display_name}><Input id="st-name" value={v.display_name} maxLength={80} onChange={(e) => set("display_name", e.target.value)} /></Field>
           <Field id="st-tz" label="Timezone" error={errors.timezone} hint="Defines “today”, due times, streaks and reminders.">
@@ -86,8 +86,8 @@ export function SettingsForm({ profile, widgets }: { profile: Profile; widgets: 
         </div>
       </section>
 
-      <section aria-labelledby="st-look" className="grid gap-5 rounded-2xl border bg-card p-5">
-        <h2 id="st-look" className="text-xl font-semibold">Appearance</h2>
+      <section aria-labelledby="st-look" className="grid gap-5 rounded-3xl border bg-card p-5">
+        <h2 id="st-look" className="text-2xl">Appearance</h2>
         <fieldset className="grid gap-2">
           <legend className="mb-1 text-sm font-medium">Accent colour</legend>
           <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Accent colour">
@@ -109,8 +109,8 @@ export function SettingsForm({ profile, widgets }: { profile: Profile; widgets: 
         </div>
       </section>
 
-      <section aria-labelledby="st-widgets" className="grid gap-3 rounded-2xl border bg-card p-5">
-        <h2 id="st-widgets" className="text-xl font-semibold">Dashboard widgets</h2>
+      <section aria-labelledby="st-widgets" className="grid gap-3 rounded-3xl border bg-card p-5">
+        <h2 id="st-widgets" className="text-2xl">Dashboard widgets</h2>
         <ul className="grid gap-2 sm:grid-cols-2">
           {WIDGETS.map((w) => {
             const on = v.dashboard_widgets.includes(w.id);
@@ -147,8 +147,8 @@ export function BrowserNotifications() {
   function disable() { try { localStorage.removeItem("lifeos.browserNotify"); } catch { /* ignore */ } setOn(false); toast.success("Browser notifications turned off"); }
 
   return (
-    <section aria-labelledby="st-notify" className="grid gap-3 rounded-2xl border bg-card p-5">
-      <h2 id="st-notify" className="flex items-center gap-2 text-xl font-semibold"><Bell className="size-5" aria-hidden /> Reminders</h2>
+    <section aria-labelledby="st-notify" className="grid gap-3 rounded-3xl border bg-card p-5">
+      <h2 id="st-notify" className="flex items-center gap-2 text-2xl"><Bell className="size-5" aria-hidden /> Reminders</h2>
       <p className="text-sm text-muted-foreground">In-app notifications for overdue and soon-due tasks and events are always on (bell in the top bar). Optional browser notifications fire <strong>only while this app is open in a tab</strong> — Life OS has no background push or email service, so nothing is delivered when the app is closed.</p>
       {perm === "unsupported" ? <p className="text-sm">Your browser doesn’t support notifications.</p>
         : perm === "denied" ? <p className="text-sm text-warning">Notifications are blocked for this site. Allow them in your browser’s site settings to enable reminders.</p>
@@ -167,8 +167,8 @@ export function DataAndAccount() {
 
   return (
     <>
-      <section aria-labelledby="st-data" className="grid gap-3 rounded-2xl border bg-card p-5">
-        <h2 id="st-data" className="flex items-center gap-2 text-xl font-semibold"><Download className="size-5" aria-hidden /> Your data</h2>
+      <section aria-labelledby="st-data" className="grid gap-3 rounded-3xl border bg-card p-5">
+        <h2 id="st-data" className="flex items-center gap-2 text-2xl"><Download className="size-5" aria-hidden /> Your data</h2>
         <p className="text-sm text-muted-foreground">Download everything stored for your account as one JSON file, or export individual lists as CSV. Exports contain only your own records.</p>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" asChild><a href="/api/export" download>Full export (JSON)</a></Button>
@@ -176,14 +176,14 @@ export function DataAndAccount() {
         </div>
       </section>
 
-      <section aria-labelledby="st-account" className="grid gap-3 rounded-2xl border bg-card p-5">
-        <h2 id="st-account" className="text-xl font-semibold">Account</h2>
+      <section aria-labelledby="st-account" className="grid gap-3 rounded-3xl border bg-card p-5">
+        <h2 id="st-account" className="text-2xl">Account</h2>
         <p className="text-sm text-muted-foreground">Signed in as <strong className="text-foreground">{email}</strong>.</p>
         <div><form action={signOut}><Button type="submit" variant="outline"><LogOut /> Sign out</Button></form></div>
       </section>
 
       <section aria-labelledby="st-danger" className="grid gap-3 rounded-2xl border border-destructive/40 bg-destructive/5 p-5">
-        <h2 id="st-danger" className="text-xl font-semibold text-destructive">Delete account</h2>
+        <h2 id="st-danger" className="text-2xl text-destructive">Delete account</h2>
         <p className="text-sm text-muted-foreground">Permanently deletes your account and every task, event, habit, goal, project, note and transaction. This cannot be undone. Export your data first if you want a copy.</p>
         {!open ? <div><Button variant="destructive" onClick={() => setOpen(true)}><Trash2 /> Delete my account…</Button></div> : (
           <form className="grid max-w-sm gap-2" onSubmit={async (e) => { e.preventDefault(); const r = await exec(() => deleteAccount(confirm), { refresh: false }); if (!r.ok) router.refresh(); }}>

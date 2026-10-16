@@ -28,7 +28,7 @@ export function HabitsView({ stats, weekly, today }: { stats: HabitStats[]; week
 
   return (
     <div className="grid gap-6">
-      <section className="flex flex-wrap items-center gap-4 rounded-2xl border bg-card p-4">
+      <section className="flex flex-wrap items-center gap-4 rounded-3xl border bg-card p-4">
         <div className="min-w-48 flex-1">
           <p className="text-sm text-muted-foreground">Today</p>
           <p className="text-2xl font-semibold tabular">{doneToday}<span className="text-muted-foreground"> / {dueToday.length}</span> <span className="text-base font-normal text-muted-foreground">habits done</span></p>
@@ -45,8 +45,8 @@ export function HabitsView({ stats, weekly, today }: { stats: HabitStats[]; week
       )}
 
       {active.length > 0 && (
-        <section aria-labelledby="hb-weekly" className="rounded-2xl border bg-card p-4">
-          <h2 id="hb-weekly" className="text-lg font-semibold">Weekly consistency</h2>
+        <section aria-labelledby="hb-weekly" className="rounded-3xl border bg-card p-4">
+          <h2 id="hb-weekly" className="text-2xl">Weekly consistency</h2>
           <p className="mb-3 text-xs text-muted-foreground">Share of scheduled habit-days completed, per week (weeks start Monday; the current week is to date).</p>
           <div className="h-52" role="img" aria-label={`Weekly completion rate, last 8 weeks: ${weekly.map((w) => `week of ${w.week} ${w.rate ?? "no data"}%`).join("; ")}`}>
             <ResponsiveContainer width="100%" height="100%">
@@ -93,7 +93,7 @@ function HabitCard({ s, today }: { s: HabitStats; today: LocalDate }) {
   const toggle = (d: LocalDate) => void exec(() => setHabitCompletion(habit.id, d, !done.has(d)));
 
   return (
-    <li className={cn("rounded-2xl border bg-card p-4", archived && "opacity-70")} style={{ borderLeft: `4px solid ${color}` }}>
+    <li className={cn("rounded-3xl border bg-card p-4", archived && "opacity-70")} style={{ borderLeft: `4px solid ${color}` }}>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <h3 className="font-sans text-base font-semibold">{habit.title}</h3>

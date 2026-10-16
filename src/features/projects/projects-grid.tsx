@@ -48,9 +48,9 @@ export function ProjectsGrid({ projects }: { projects: ProjectWithProgress[] }) 
             const late = p.deadline && p.deadline < today && p.status !== "completed";
             return (
               <li key={p.id}>
-                <Link href={`/projects/${p.id}`} className="block h-full rounded-2xl border bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-ring/50 hover:shadow-md" style={{ borderTop: `3px solid ${p.color ?? "var(--primary)"}` }}>
+                <Link href={`/projects/${p.id}`} className="block h-full rounded-3xl border bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-ring/50 hover:shadow-md" style={{ borderTop: `3px solid ${p.color ?? "var(--primary)"}` }}>
                   <div className="flex items-start justify-between gap-2">
-                    <h2 className="line-clamp-2 text-lg font-semibold leading-snug">{p.title}</h2>
+                    <h2 className="line-clamp-2 text-2xl leading-snug">{p.title}</h2>
                     <PriorityBadge priority={p.priority} />
                   </div>
                   {p.description && <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{p.description}</p>}

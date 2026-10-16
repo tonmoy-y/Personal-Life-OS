@@ -110,10 +110,10 @@ export function FinanceView({ filters, transactions, trendTxns, budgets, otherCu
       </section>
 
       {!filters.rangeMode && (
-        <section aria-labelledby="fin-budgets" className="rounded-2xl border bg-card p-4">
+        <section aria-labelledby="fin-budgets" className="rounded-3xl border bg-card p-4">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h2 id="fin-budgets" className="text-lg font-semibold">Budgets · {formatLocalDate(filters.month, { month: "long", year: "numeric" })}</h2>
+              <h2 id="fin-budgets" className="text-2xl">Budgets · {formatLocalDate(filters.month, { month: "long", year: "numeric" })}</h2>
               <p className="text-xs text-muted-foreground">Limits you set per category, compared with actual expenses this month. Budgets are not transactions.</p>
             </div>
             <Button size="sm" variant="outline" onClick={() => setBudgetDlg(true)}><Plus /> Set budget</Button>
@@ -139,8 +139,8 @@ export function FinanceView({ filters, transactions, trendTxns, budgets, otherCu
       )}
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <section aria-labelledby="fin-cat" className="rounded-2xl border bg-card p-4">
-          <h2 id="fin-cat" className="text-lg font-semibold">Spending by category</h2>
+        <section aria-labelledby="fin-cat" className="rounded-3xl border bg-card p-4">
+          <h2 id="fin-cat" className="text-2xl">Spending by category</h2>
           <p className="mb-2 text-xs text-muted-foreground">Expenses in the selected period.</p>
           {breakdown.length === 0 ? <p className="py-8 text-center text-sm text-muted-foreground">No expenses in this period.</p> : (
             <div className="h-64" role="img" aria-label={`Spending by category: ${breakdown.map((b) => `${b.category} ${money(b.total)}`).join(", ")}`}>
@@ -156,8 +156,8 @@ export function FinanceView({ filters, transactions, trendTxns, budgets, otherCu
             </div>
           )}
         </section>
-        <section aria-labelledby="fin-trend" className="rounded-2xl border bg-card p-4">
-          <h2 id="fin-trend" className="text-lg font-semibold">Month-to-month</h2>
+        <section aria-labelledby="fin-trend" className="rounded-3xl border bg-card p-4">
+          <h2 id="fin-trend" className="text-2xl">Month-to-month</h2>
           <p className="mb-2 text-xs text-muted-foreground">Income vs expenses, last 6 months.</p>
           {trend.every((m) => m.income === 0 && m.expense === 0) ? <p className="py-8 text-center text-sm text-muted-foreground">No data yet.</p> : (
             <div className="h-64" role="img" aria-label={`Monthly income and expenses: ${trend.map((m) => `${m.month} income ${money(m.income)}, expenses ${money(m.expense)}`).join("; ")}`}>
@@ -178,12 +178,12 @@ export function FinanceView({ filters, transactions, trendTxns, budgets, otherCu
       </div>
 
       <section aria-labelledby="fin-tx">
-        <h2 id="fin-tx" className="mb-2 text-lg font-semibold">Transactions <span className="text-sm font-normal text-muted-foreground tabular">({transactions.length})</span></h2>
+        <h2 id="fin-tx" className="mb-2 text-2xl">Transactions <span className="text-sm font-normal text-muted-foreground tabular">({transactions.length})</span></h2>
         {transactions.length === 0 ? (
           <EmptyState icon={Wallet} title="No transactions in this period" description="Record income and expenses to see totals, budgets and trends. Nothing is imported automatically."
             action={<Button onClick={() => setCreating("expense")}><Plus /> Add transaction</Button>} />
         ) : (
-          <div className="overflow-x-auto rounded-2xl border bg-card">
+          <div className="overflow-x-auto rounded-3xl border bg-card">
             <table className="w-full min-w-[34rem] text-sm">
               <caption className="sr-only">Transactions for the selected period</caption>
               <thead className="border-b bg-muted/50 text-left text-xs text-muted-foreground"><tr><th scope="col" className="px-3 py-2 font-medium">Date</th><th scope="col" className="px-3 py-2 font-medium">Category</th><th scope="col" className="px-3 py-2 font-medium">Description</th><th scope="col" className="px-3 py-2 text-right font-medium">Amount</th><th scope="col" className="w-20 px-3 py-2"><span className="sr-only">Actions</span></th></tr></thead>
@@ -214,7 +214,7 @@ export function FinanceView({ filters, transactions, trendTxns, budgets, otherCu
 
 function Stat({ label, value, icon, tone }: { label: string; value: string; icon?: React.ReactNode; tone?: "good" | "bad" }) {
   return (
-    <div className="rounded-2xl border bg-card p-4">
+    <div className="rounded-3xl border bg-card p-4">
       <p className="flex items-center gap-1.5 text-sm text-muted-foreground">{icon}{label}</p>
       <p className={cn("mt-1 text-2xl font-semibold tabular", tone === "bad" && "text-destructive")}>{value}</p>
     </div>

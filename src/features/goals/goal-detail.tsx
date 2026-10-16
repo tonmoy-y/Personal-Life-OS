@@ -35,7 +35,7 @@ export function GoalDetail({ goal, milestones, logs }: { goal: Goal; milestones:
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
       <div className="grid content-start gap-6">
-        <section className="rounded-2xl border bg-card p-5">
+        <section className="rounded-3xl border bg-card p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant={goal.status === "completed" ? "default" : "secondary"} className="capitalize">{goal.status}</Badge>
@@ -62,8 +62,8 @@ export function GoalDetail({ goal, milestones, logs }: { goal: Goal; milestones:
           </div>
         </section>
 
-        <section aria-labelledby="gl-hist" className="rounded-2xl border bg-card p-4">
-          <h2 id="gl-hist" className="text-lg font-semibold">Progress history</h2>
+        <section aria-labelledby="gl-hist" className="rounded-3xl border bg-card p-4">
+          <h2 id="gl-hist" className="text-2xl">Progress history</h2>
           {logs.length === 0 ? <p className="mt-2 text-sm text-muted-foreground">No updates yet. Log your first one above.</p> : (
             <>
               <div className="mt-3 h-52" role="img" aria-label={`Progress over time in ${goal.unit}: ${data.map((d) => `${d.date} ${d.value}`).join(", ")}`}>
@@ -86,7 +86,7 @@ export function GoalDetail({ goal, milestones, logs }: { goal: Goal; milestones:
       </div>
 
       <aside aria-labelledby="gl-ms" className="grid content-start gap-3">
-        <h2 id="gl-ms" className="text-xl font-semibold">Milestones</h2>
+        <h2 id="gl-ms" className="text-2xl">Milestones</h2>
         <form onSubmit={async (e) => { e.preventDefault(); if (!title.trim()) return; const r = await exec(() => addGoalMilestone(goal.id, { title, due_date: due || null }), { success: "Milestone added" }); if (r.ok) { setTitle(""); setDue(""); } }} className="grid gap-2 rounded-xl border bg-card p-3">
           <Input aria-label="Milestone title" placeholder="Milestone…" value={title} maxLength={160} onChange={(e) => setTitle(e.target.value)} />
           <div className="flex gap-2"><Input aria-label="Milestone due date" type="date" value={due} onChange={(e) => setDue(e.target.value)} /><Button type="submit" disabled={pending || !title.trim()}><Plus /> Add</Button></div>
