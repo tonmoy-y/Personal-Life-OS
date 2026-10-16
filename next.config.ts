@@ -35,6 +35,9 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
+  // Keep visited pages in the client router cache for 30s so back/forward and repeat clicks are instant.
+  // Server actions call revalidatePath, which clears this cache, so edits still show immediately.
+  experimental: { staleTimes: { dynamic: 30 } },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
