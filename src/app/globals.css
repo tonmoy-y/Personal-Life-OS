@@ -160,15 +160,23 @@
 
 @layer components {
   /* Premium surfaces: hairline border + layered soft shadow on card-like panels. */
-  .bg-card.rounded-2xl, .bg-card.rounded-xl {
+  .bg-card.rounded-3xl, .bg-card.rounded-2xl, .bg-card.rounded-xl {
     box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.5), 0 1px 2px oklch(0.2 0.02 255 / 0.04), 0 12px 28px -16px oklch(0.2 0.02 255 / 0.18);
   }
-  .dark .bg-card.rounded-2xl, .dark .bg-card.rounded-xl {
+  .dark .bg-card.rounded-3xl, .dark .bg-card.rounded-2xl, .dark .bg-card.rounded-xl {
     box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.04), 0 12px 28px -16px oklch(0 0 0 / 0.6);
   }
   button, a, [role="button"] { transition-property: color, background-color, border-color, box-shadow, transform, opacity; transition-duration: 150ms; }
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-thumb { background: color-mix(in oklch, var(--foreground) 18%, transparent); border-radius: 999px; border: 3px solid transparent; background-clip: content-box; }
+}
+
+@layer components {
+  aside[aria-label="Primary"] { background-image: linear-gradient(180deg, color-mix(in oklch, var(--primary) 5%, var(--sidebar)), var(--sidebar) 40%); }
+  aside[aria-label="Primary"] a[aria-current="page"] { position: relative; box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--primary) 18%, transparent); }
+  aside[aria-label="Primary"] a[aria-current="page"]::before { content: ""; position: absolute; left: -0.75rem; top: 22%; bottom: 22%; width: 3px; border-radius: 999px; background: var(--primary); }
+  input, select, textarea { box-shadow: inset 0 1px 2px oklch(0.2 0.02 255 / 0.05); }
+  header.sticky { box-shadow: 0 1px 0 color-mix(in oklch, var(--foreground) 4%, transparent), 0 8px 24px -16px oklch(0.2 0.02 255 / 0.15); }
 }
 
 @layer utilities {

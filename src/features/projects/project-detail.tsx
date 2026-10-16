@@ -48,7 +48,7 @@ export function ProjectDetail({ project, tasks, milestones, done, total, progres
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
       <div className="grid content-start gap-6">
-        <section className="rounded-2xl border bg-card p-5" style={{ borderTop: `3px solid ${project.color ?? "var(--primary)"}` }}>
+        <section className="rounded-3xl border bg-card p-5" style={{ borderTop: `3px solid ${project.color ?? "var(--primary)"}` }}>
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant="outline">{STATUS_LABEL[project.status]}</Badge>
@@ -72,7 +72,7 @@ export function ProjectDetail({ project, tasks, milestones, done, total, progres
         </section>
 
         <section aria-labelledby="proj-tasks" className="grid gap-3">
-          <h2 id="proj-tasks" className="text-xl font-semibold">Tasks</h2>
+          <h2 id="proj-tasks" className="text-2xl">Tasks</h2>
           <QuickAddTask projectId={project.id} placeholder="Add a task to this project…" />
           {tasks.length === 0 ? <EmptyState title="No tasks linked yet" description="Add one above, or link existing tasks from the task editor." /> : (
             <>
@@ -89,7 +89,7 @@ export function ProjectDetail({ project, tasks, milestones, done, total, progres
       </div>
 
       <aside aria-labelledby="proj-ms" className="grid content-start gap-3">
-        <h2 id="proj-ms" className="text-xl font-semibold">Milestones</h2>
+        <h2 id="proj-ms" className="text-2xl">Milestones</h2>
         <p className="-mt-2 text-xs text-muted-foreground">{upcoming} upcoming</p>
         <form onSubmit={addMilestone} className="grid gap-2 rounded-xl border bg-card p-3">
           <Input aria-label="Milestone title" placeholder="Milestone…" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={160} />

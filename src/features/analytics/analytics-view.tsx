@@ -12,8 +12,8 @@ const axis = { tickLine: false, axisLine: false, fontSize: 12, stroke: "var(--mu
 
 function Panel({ id, title, note, children, className }: { id: string; title: string; note: string; children: React.ReactNode; className?: string }) {
   return (
-    <section aria-labelledby={id} className={cn("rounded-2xl border bg-card p-4", className)}>
-      <h2 id={id} className="text-lg font-semibold">{title}</h2>
+    <section aria-labelledby={id} className={cn("rounded-3xl border bg-card p-4", className)}>
+      <h2 id={id} className="text-2xl">{title}</h2>
       <p className="mb-3 text-xs text-muted-foreground">{note}</p>
       {children}
     </section>
@@ -23,7 +23,7 @@ const Empty = ({ children }: { children: React.ReactNode }) => <p className="py-
 
 function Kpi({ label, value, sub, tone }: { label: string; value: string; sub?: string; tone?: "bad" }) {
   return (
-    <div className="rounded-2xl border bg-card p-4">
+    <div className="rounded-3xl border bg-card p-4">
       <p className="text-sm text-muted-foreground">{label}</p>
       <p className={cn("mt-1 text-2xl font-semibold tabular", tone === "bad" && "text-destructive")}>{value}</p>
       {sub && <p className="mt-0.5 text-xs text-muted-foreground">{sub}</p>}

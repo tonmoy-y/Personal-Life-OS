@@ -28,7 +28,7 @@ export function OnboardingForm({ initial }: { initial: { display_name: string; c
   }
 
   return (
-    <form onSubmit={submit} className="mt-8 grid gap-5 rounded-2xl border bg-card p-6">
+    <form onSubmit={submit} className="mt-8 grid gap-5 rounded-3xl border bg-card p-6">
       <Field id="ob-name" label="What should we call you?"><Input id="ob-name" value={v.display_name} maxLength={80} autoFocus onChange={(e) => setV({ ...v, display_name: e.target.value })} /></Field>
       <Field id="ob-tz" label="Timezone" hint="We detected this from your browser. It decides what “today” means.">
         <select id="ob-tz" className={selectClass} value={v.timezone} onChange={(e) => setV({ ...v, timezone: e.target.value })}>{(zones.includes(v.timezone) ? zones : [v.timezone, ...zones]).map((z) => <option key={z}>{z}</option>)}</select>

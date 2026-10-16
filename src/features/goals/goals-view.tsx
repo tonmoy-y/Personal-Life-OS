@@ -52,9 +52,9 @@ export function GoalsView({ goals }: { goals: GoalWithMilestones[] }) {
             const late = g.status === "active" && g.target_date && g.target_date < today;
             const msDone = g.milestones.filter((m) => m.completed_at).length;
             return (
-              <li key={g.id} className="rounded-2xl border bg-card p-4">
+              <li key={g.id} className="rounded-3xl border bg-card p-4">
                 <div className="flex items-start justify-between gap-2">
-                  <Link href={`/goals/${g.id}`} className="min-w-0 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring"><h2 className="line-clamp-2 text-lg font-semibold leading-snug hover:underline">{g.title}</h2></Link>
+                  <Link href={`/goals/${g.id}`} className="min-w-0 rounded outline-none focus-visible:ring-2 focus-visible:ring-ring"><h2 className="line-clamp-2 text-2xl leading-snug hover:underline">{g.title}</h2></Link>
                   <div className="flex shrink-0 gap-1">
                     <Badge variant="secondary">{g.horizon === "long" ? "Long-term" : "Short-term"}</Badge>
                     {g.category && <Badge variant="outline">{g.category}</Badge>}

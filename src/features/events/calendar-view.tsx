@@ -73,7 +73,7 @@ export function CalendarView({ view, anchor, items }: { view: CalView; anchor: L
           <Button asChild variant="outline" size="icon" aria-label="Previous"><Link href={href(view, step.prev)} prefetch><Pending><ChevronLeft /></Pending></Link></Button>
           <Button asChild variant="outline" size="icon" aria-label="Next"><Link href={href(view, step.next)} prefetch><Pending><ChevronRight /></Pending></Link></Button>
           <Button asChild variant="outline"><Link href={href(view, today)} prefetch><Pending>Today</Pending></Link></Button>
-          <h2 className="ml-2 text-xl font-semibold" aria-live="polite">{title}</h2>
+          <h2 className="ml-2 text-2xl" aria-live="polite">{title}</h2>
         </div>
         <div className="flex items-center gap-2">
           <nav aria-label="Calendar view" className="flex gap-1 rounded-xl bg-muted p-1">
@@ -93,7 +93,7 @@ export function CalendarView({ view, anchor, items }: { view: CalView; anchor: L
         const rows = Math.ceil((diffDays(monthEnd(anchor), start) + 1) / 7);
         const grid = days.slice(0, rows * 7);
         return (
-          <div className="overflow-hidden rounded-2xl border bg-card" role="grid" aria-label={title}>
+          <div className="overflow-hidden rounded-3xl border bg-card" role="grid" aria-label={title}>
             <div className="grid grid-cols-7 border-b bg-muted/50 text-center text-xs font-medium text-muted-foreground" role="row">
               {weekdayNames.map((n) => <div key={n} role="columnheader" className="py-2">{n}</div>)}
             </div>
