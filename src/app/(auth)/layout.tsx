@@ -8,7 +8,7 @@ export default function AuthLayout({ children }: LayoutProps<"/">) {
         <Link href="/" aria-label="Back to home page"><Logo className="text-primary-foreground" /></Link>
         <div className="max-w-md">
           <p className="font-heading text-4xl font-semibold leading-tight text-balance">One calm place for the things that make up your life.</p>
-          <p className="mt-4 text-primary-foreground/80">Tasks, calendar, habits, goals, projects, notes and money — private to you, protected by row-level security, and free of paid AI.</p>
+          <p className="mt-4 text-primary-foreground/80">Tasks, calendar, habits, goals, projects, notes and money — private to you, protected by row-level security, and free to use.</p>
         </div>
         <p className="text-sm text-primary-foreground/70">Your data stays yours: export or delete it any time.</p>
         <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 size-96 rounded-full bg-primary-foreground/10" />

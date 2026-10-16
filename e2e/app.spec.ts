@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 import { signIn, userA, userB } from "./helpers";
 
 test.describe.configure({ mode: "serial" });
@@ -146,6 +147,21 @@ test("signed-in users can return to the home page and get back to the dashboard"
   await page.screenshot({ path: "test-results/dashboard.png", fullPage: true });
   await page.goto("/login");
   await expect(page).toHaveURL(/dashboard/);
+});
+
+test("no serious accessibility violations on key pages (light + dark)", async ({ page }) => {
+  await signIn(page, userA);
+  await page.waitForURL(/dashboard|today/);
+  for (const scheme of ["light", "dark"] as const) {
+    await page.emulateMedia({ colorScheme: scheme });
+    await page.evaluate((s) => localStorage.setItem("theme", s), scheme);
+    for (const path of ["/dashboard", "/calendar", "/tasks", "/finance", "/settings"]) {
+      await page.goto(path, { waitUntil: "networkidle" });
+      const res = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+      const bad = res.violations.filter((v) => v.impact === "serious" || v.impact === "critical").map((v) => `${scheme} ${path} ${v.id}: ${v.nodes[0]?.target.join(" ")}`);
+      expect(bad).toEqual([]);
+    }
+  }
 });
 
 test("user B cannot see user A's data", async ({ page }) => {

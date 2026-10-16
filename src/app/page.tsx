@@ -107,7 +107,7 @@ export default async function Home() {
         <section className="relative px-5 pb-10 pt-16 text-center sm:pt-24">
           <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(60%_60%_at_50%_0%,color-mix(in_oklch,var(--primary)_18%,transparent),transparent)]" />
           <p className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border bg-card/80 px-3.5 py-1.5 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur">
-            <span className="size-1.5 rounded-full bg-success" /> Free · private · no paid AI required
+            <span className="size-1.5 rounded-full bg-success" /> Free · private · no paid plan required
           </p>
           <h1 className="mx-auto max-w-4xl text-balance text-6xl leading-[0.98] tracking-tight sm:text-8xl">
             Run your life from <em className="text-primary">one calm place.</em>
