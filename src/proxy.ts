@@ -43,6 +43,9 @@ export async function proxy(request: NextRequest) {
     return redirect;
   };
 
+  if (!signedIn && pathname.startsWith("/api/")) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   if (!signedIn && !isPublic(pathname)) {
     return redirectTo("/login", `?next=${encodeURIComponent(pathname + request.nextUrl.search)}`);
   }
