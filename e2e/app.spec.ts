@@ -115,7 +115,12 @@ test("calendar controls and appearance settings work", async ({ page }) => {
   await page.getByRole("button", { name: "Create event" }).click();
   await expect(page.getByRole("button", { name: /Event: E2E calendar event/ }).first()).toBeVisible();
 
+  const consoleErrors: string[] = [];
+  page.on("console", (m) => { if (m.type() === "error") consoleErrors.push(m.text()); });
+  page.on("pageerror", (e) => consoleErrors.push(e.message));
   await page.goto("/settings");
+  await page.waitForLoadState("networkidle");
+  expect(consoleErrors, "no hydration/console errors on settings").toEqual([]);
   await page.getByRole("radio", { name: "Indigo" }).click();
   await page.getByRole("radio", { name: "24-hour" }).click();
   await page.getByRole("radio", { name: "Week", exact: true }).click();
