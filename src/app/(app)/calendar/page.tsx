@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: "Calendar" };
 export default async function CalendarPage({ searchParams }: PageProps<"/calendar">) {
   const sp = await searchParams;
   const { supabase, profile } = await getSession();
-  const view: CalView = sp.view === "week" || sp.view === "agenda" ? sp.view : "month";
+  const view: CalView = sp.view === "month" || sp.view === "week" || sp.view === "agenda" ? sp.view : profile.calendar_view;
   const date = typeof sp.date === "string" && isLocalDate(sp.date) ? sp.date : todayIn(profile.timezone);
   const [from, to] =
     view === "month" ? (() => { const s = startOfWeek(monthStart(date), profile.week_start); return [s, addDays(s, 41)]; })()

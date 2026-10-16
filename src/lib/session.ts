@@ -23,6 +23,12 @@ export const getSession = cache(async () => {
       currency: "BDT",
       week_start: 1,
       theme: "system",
+      accent: "teal",
+      density: "comfortable",
+      text_size: "md",
+      corners: "round",
+      time_format: "12h",
+      calendar_view: "month",
       dashboard_widgets: ["summary", "tasks", "events", "habits", "goals", "spending"],
       onboarded: false,
     } as Profile);

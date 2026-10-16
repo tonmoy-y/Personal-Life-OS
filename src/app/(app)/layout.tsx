@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { AppearanceStyle } from "@/components/layout/appearance-style";
 import { AppShell } from "@/components/layout/app-shell";
 import { loadReminders } from "@/features/notifications/queries";
 import { getSession } from "@/lib/session";
@@ -14,10 +15,12 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     loadReminders(supabase, profile.timezone).catch(() => []),
   ]);
   return (
+    <>
+    <AppearanceStyle profile={profile} />
     <AppShell
       reminders={reminders}
       data={{
-        profile: { id: profile.id, display_name: profile.display_name, timezone: profile.timezone, currency: profile.currency, week_start: profile.week_start, theme: profile.theme },
+        profile: { id: profile.id, display_name: profile.display_name, timezone: profile.timezone, currency: profile.currency, week_start: profile.week_start, theme: profile.theme, time_format: profile.time_format, calendar_view: profile.calendar_view },
         email: user.email ?? "",
         projects: projects.data ?? [],
         goals: goals.data ?? [],
@@ -25,5 +28,6 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     >
       {children}
     </AppShell>
+    </>
   );
 }

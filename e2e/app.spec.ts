@@ -97,6 +97,37 @@ test("user A: onboarding, task CRUD + recurrence, habit, project link, finance",
   await expect(page.locator("[aria-label=Preview] img[onerror]")).toHaveCount(0);
 });
 
+test("calendar controls and appearance settings work", async ({ page }) => {
+  await signIn(page, userA);
+  await page.waitForURL(/dashboard|today/);
+  await page.goto("/calendar");
+  const main = page.locator("main");
+  await main.getByRole("link", { name: "Next", exact: true }).click();
+  await expect(page).toHaveURL(/view=month&date=/);
+  await main.getByRole("link", { name: "Previous", exact: true }).click();
+  await page.getByRole("navigation", { name: "Calendar view" }).getByRole("link", { name: "Week" }).click();
+  await expect(page).toHaveURL(/view=week/);
+  await page.getByRole("button", { name: "New task" }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "New event" }).click();
+  await page.getByLabel("Title").fill("E2E calendar event");
+  await page.getByRole("button", { name: "Create event" }).click();
+  await expect(page.getByRole("button", { name: /Event: E2E calendar event/ }).first()).toBeVisible();
+
+  await page.goto("/settings");
+  await page.getByRole("radio", { name: "Indigo" }).click();
+  await page.getByRole("radio", { name: "24-hour" }).click();
+  await page.getByRole("radio", { name: "Week", exact: true }).click();
+  await page.getByRole("button", { name: "Save settings" }).click();
+  await expect(page.getByText("Settings saved")).toBeVisible();
+  await page.goto("/calendar");
+  await expect(page).toHaveURL(/calendar/);
+  await expect(page.getByRole("navigation", { name: "Calendar view" }).getByRole("link", { name: "Week" })).toHaveAttribute("aria-current", "page");
+  const hue = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--primary"));
+  expect(hue).toContain("268");
+});
+
 test("user B cannot see user A's data", async ({ page }) => {
   await signIn(page, userB);
   await page.waitForURL(/\/onboarding/);
