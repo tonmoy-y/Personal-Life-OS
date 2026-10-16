@@ -156,7 +156,7 @@ export function AppShell({ data, reminders, children }: { data: AppData; reminde
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b bg-background/85 px-3 backdrop-blur sm:px-5">
             <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open navigation" onClick={() => setMobileOpen(true)}><Menu /></Button>
-            <Link href="/" className="md:hidden" aria-label="Life OS home page"><LogoMark className="size-7 text-primary" /></Link>
+            <Link href="/" className="md:hidden" aria-label="Life OS home page"><LogoMark className="size-7" /></Link>
             <Breadcrumbs />
             <div className="ml-auto flex items-center gap-1">
               <Button variant="outline" onClick={() => setPaletteOpen(true)} className="hidden h-8 w-56 justify-start gap-2 text-muted-foreground lg:flex" aria-label="Search and commands (Control K)">
