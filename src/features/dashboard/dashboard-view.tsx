@@ -13,9 +13,9 @@ import { TaskItem } from "@/features/tasks/task-item";
 
 function Card({ title, href, hrefLabel, children, className, id }: { title: string; href?: string; hrefLabel?: string; children: React.ReactNode; className?: string; id: string }) {
   return (
-    <section aria-labelledby={id} className={cn("rise-in rounded-2xl border bg-card p-4", className)}>
+    <section aria-labelledby={id} className={cn("rise-in rounded-3xl border bg-card p-5", className)}>
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h2 id={id} className="text-lg font-semibold">{title}</h2>
+        <h2 id={id} className="text-2xl">{title}</h2>
         {href && <Link href={href} className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">{hrefLabel ?? "View all"} <ArrowRight className="size-3" aria-hidden /></Link>}
       </div>
       {children}
@@ -32,6 +32,34 @@ export function DailySummary({ d, tz, tf = "12h" }: { d: DashboardData; tz: stri
   const next = d.upcomingEvents[0];
   if (next) { const s = utcToLocal(next.start_at, tz); parts.push(`next event “${next.title}” ${s.date === d.today ? "at " + formatTime(s.time, tf) : "on " + formatLocalDate(s.date)}`); }
   return <p className="text-pretty text-sm leading-relaxed text-muted-foreground">{parts.join(" · ")}.</p>;
+}
+
+export function DashboardHero({ d, eyebrow, title, tz, tf, currency, summary }: { d: DashboardData; eyebrow: string; title: string; tz: string; tf: "12h" | "24h"; currency: string; summary: boolean }) {
+  const stats = [
+    { label: "Due today", value: String(d.openToday.length), href: "/tasks?view=today", icon: CheckCircle2, tone: "" },
+    { label: "Overdue", value: String(d.overdueTasks.length), href: "/tasks?view=overdue", icon: CalendarClock, tone: d.overdueTasks.length ? "text-destructive" : "" },
+    { label: "Habits today", value: d.dueHabits.length ? `${d.habitsDone}/${d.dueHabits.length}` : "–", href: "/habits", icon: Flame, tone: "" },
+    { label: "Spent this month", value: formatMoney(d.spend.expense, currency), href: "/finance", icon: Wallet, tone: "" },
+  ];
+  return (
+    <section aria-label="Overview" className="rise-in relative mb-6 overflow-hidden rounded-3xl border bg-card p-6 sm:p-8">
+      <div aria-hidden className="pointer-events-none absolute -right-24 -top-28 size-80 rounded-full bg-primary/10 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -bottom-32 left-1/3 size-72 rounded-full bg-chart-2/10 blur-3xl" />
+      <p className="relative text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">{eyebrow}</p>
+      <h1 className="relative mt-2 text-balance text-5xl leading-[1.02] sm:text-6xl">{title}</h1>
+      {summary && <div className="relative mt-3 max-w-2xl"><DailySummary d={d} tz={tz} tf={tf} /></div>}
+      <ul className="relative mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {stats.map((s) => (
+          <li key={s.label}>
+            <Link href={s.href} className="group block rounded-2xl border bg-background/70 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:border-primary/40">
+              <span className="flex items-center justify-between text-xs text-muted-foreground">{s.label}<s.icon className="size-4 transition group-hover:text-primary" aria-hidden /></span>
+              <span className={cn("mt-2 block font-heading text-4xl leading-none tabular", s.tone)}>{s.value}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
 }
 
 export function DashboardWidgets({ d, widgets, tz, currency, tf = "12h", fullTasks = false }: { d: DashboardData; widgets: string[]; tz: string; currency: string; tf?: "12h" | "24h"; fullTasks?: boolean }) {

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ChevronsLeft, ChevronsRight, CircleUser, LogOut, Menu, Monitor, Moon, Plus, Search, Settings, Sun } from "lucide-react";
+import { ChevronsLeft, ChevronsRight, CircleUser, Home, LogOut, Menu, Monitor, Moon, Plus, Search, Settings, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { signOut } from "@/app/(auth)/actions";
 import { useAction } from "@/components/common/use-action";
@@ -67,7 +67,7 @@ function Breadcrumbs() {
   return (
     <nav aria-label="Breadcrumb" className="min-w-0">
       <ol className="flex items-center gap-1.5 text-sm text-muted-foreground">
-        <li className="hidden sm:block"><Link href="/dashboard" className="hover:text-foreground">Life OS</Link></li>
+        <li className="hidden sm:block"><Link href="/" className="hover:text-foreground">Home</Link></li>
         {crumbs.map((c, i) => (
           <li key={c.href} className="flex min-w-0 items-center gap-1.5">
             <span aria-hidden className={i === 0 ? "hidden sm:inline" : ""}>/</span>
@@ -134,7 +134,7 @@ export function AppShell({ data, reminders, children }: { data: AppData; reminde
       <div className="flex min-h-dvh">
         <aside aria-label="Primary" className={cn("sticky top-0 hidden h-dvh shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground transition-[width] duration-200 md:flex", collapsed ? "w-[4.5rem]" : "w-64")}>
           <div className={cn("flex h-14 items-center px-4", collapsed && "justify-center px-0")}>
-            <Link href="/dashboard" aria-label="Life OS home"><Logo collapsed={collapsed} /></Link>
+            <Link href="/" aria-label="Life OS home page"><Logo collapsed={collapsed} /></Link>
           </div>
           <nav aria-label="Main" className="flex-1 overflow-y-auto px-3 py-2"><NavLinks items={NAV_MAIN} collapsed={collapsed} /></nav>
           <div className="border-t px-3 py-2">
@@ -147,7 +147,7 @@ export function AppShell({ data, reminders, children }: { data: AppData; reminde
 
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetContent side="left" className="w-72 bg-sidebar p-0">
-            <SheetHeader className="p-4 pb-0"><SheetTitle><Logo /></SheetTitle><SheetDescription className="sr-only">Main navigation</SheetDescription></SheetHeader>
+            <SheetHeader className="p-4 pb-0"><SheetTitle><Link href="/" onClick={() => setMobileOpen(false)} aria-label="Life OS home page"><Logo /></Link></SheetTitle><SheetDescription className="sr-only">Main navigation</SheetDescription></SheetHeader>
             <nav aria-label="Main" className="flex-1 overflow-y-auto px-3"><NavLinks items={NAV_MAIN} onNavigate={() => setMobileOpen(false)} /></nav>
             <div className="border-t px-3 py-3"><NavLinks items={NAV_SECONDARY} onNavigate={() => setMobileOpen(false)} /></div>
           </SheetContent>
@@ -156,7 +156,7 @@ export function AppShell({ data, reminders, children }: { data: AppData; reminde
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b bg-background/85 px-3 backdrop-blur sm:px-5">
             <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open navigation" onClick={() => setMobileOpen(true)}><Menu /></Button>
-            <Link href="/dashboard" className="md:hidden" aria-label="Life OS home"><LogoMark className="size-7 text-primary" /></Link>
+            <Link href="/" className="md:hidden" aria-label="Life OS home page"><LogoMark className="size-7 text-primary" /></Link>
             <Breadcrumbs />
             <div className="ml-auto flex items-center gap-1">
               <Button variant="outline" onClick={() => setPaletteOpen(true)} className="hidden h-8 w-56 justify-start gap-2 text-muted-foreground lg:flex" aria-label="Search and commands (Control K)">
@@ -186,6 +186,7 @@ export function AppShell({ data, reminders, children }: { data: AppData; reminde
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="truncate font-normal"><span className="block text-sm font-medium">{data.profile.display_name || "Your account"}</span><span className="block truncate text-xs text-muted-foreground">{data.email}</span></DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild><Link href="/"><Home /> Home page</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link href="/settings"><Settings /> Settings</Link></DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => setHelpOpen(true)}><CircleUser /> Keyboard shortcuts</DropdownMenuItem>
                   <DropdownMenuSeparator />

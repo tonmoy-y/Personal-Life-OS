@@ -128,6 +128,21 @@ test("calendar controls and appearance settings work", async ({ page }) => {
   expect(hue).toContain("268");
 });
 
+test("signed-in users can return to the home page and get back to the dashboard", async ({ page }) => {
+  await signIn(page, userA);
+  await page.waitForURL(/dashboard|today/);
+  await page.getByRole("link", { name: "Life OS home page" }).first().click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("link", { name: "Open dashboard" }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: "Sign in" })).toHaveCount(0);
+  await page.screenshot({ path: "test-results/landing.png", fullPage: true });
+  await page.getByRole("link", { name: "Open dashboard" }).first().click();
+  await expect(page).toHaveURL(/dashboard/);
+  await page.screenshot({ path: "test-results/dashboard.png", fullPage: true });
+  await page.goto("/login");
+  await expect(page).toHaveURL(/dashboard/);
+});
+
 test("user B cannot see user A's data", async ({ page }) => {
   await signIn(page, userB);
   await page.waitForURL(/\/onboarding/);
