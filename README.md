@@ -1,21 +1,22 @@
 # Personal Life OS
 
-A private, mobile-first workspace for one person's tasks, calendar, habits, goals, projects, notes and money. Built with Next.js 16 (App Router), TypeScript (strict), Tailwind v4, shadcn/ui, Supabase (Postgres, Auth, RLS) and Recharts. No paid AI or third-party APIs are required.
+A private, mobile-first workspace for one person's tasks, calendar, habits, goals, projects, notes and money. Built with Next.js 16 (App Router), TypeScript (strict), Tailwind v4, shadcn/ui, Supabase (Postgres, Auth, RLS) and Recharts. It runs entirely on free tiers: no paid plan, paid AI or third-party APIs are required.
 
 ## Features
 
 | Module | Highlights |
 | --- | --- |
-| Dashboard / Today | Local-date greeting, overdue + today's tasks, upcoming events, habits, goals, month spending, configurable widgets |
+| Dashboard / Today | Local-date greeting, glass overview tiles (due today, overdue, balance, spent this month), today's tasks, upcoming events, habits, goals, month spending, configurable widgets |
 | Tasks | CRUD, list/board, filters, search, sort, saved views (per device), recurrence with idempotent next-occurrence generation, undo for delete |
-| Calendar | Month / week / agenda; events, task due dates, project deadlines, milestones; timezone-correct |
+| Calendar | Month / week / agenda; events, task due dates, project deadlines, milestones; click any day to add an event, quick new task; timezone-correct; prefetched navigation |
 | Habits | Weekday schedules, duplicate-proof check-ins, streaks/rates computed from the habit's schedule and your local date, heatmaps |
 | Goals | Measurable targets (up or down), milestones, progress history chart |
 | Projects | Progress derived from real tasks, milestones, project detail |
 | Notes | Markdown, DOMPurify-sanitized preview, tags, pin/archive, optimistic-concurrency autosave with conflict handling |
 | Finance | Integer-minor-unit money, budgets vs. actual, trends, filters, CSV export; no bank connections |
 | Analytics | Defined periods, charts with labels/legends/empty states |
-| Utilities | Command palette (⌘K), global search, quick-add, keyboard shortcuts (`?`), JSON/CSV export, account deletion, onboarding, light/dark/system themes |
+| Settings & appearance | Accent colour (7), text size, density, corner style, 12/24-hour time, default calendar view, dashboard widgets, light/dark/system theme; all stored on your profile |
+| Utilities | Command palette (⌘K), global search, quick-add, keyboard shortcuts (`?`), JSON/CSV export, account deletion, onboarding, home page that adapts when you are signed in |
 
 ## Honest limitations
 
@@ -23,6 +24,10 @@ A private, mobile-first workspace for one person's tasks, calendar, habits, goal
 - No Google Calendar sync. No offline sync (the manifest enables installing the app; it does not make it work offline).
 - Rate limiting is best-effort in-memory per server instance; Supabase Auth's limits are authoritative.
 - Changing currency doesn't convert old amounts; other-currency transactions are excluded from totals and the UI says so.
+
+## Design
+
+Instrument Serif headings with Manrope body text (Geist Mono for code), warm paper tones, liquid-glass surfaces that work in light and dark, and accent colours applied from your saved preferences without a flash (`src/components/layout/appearance-style.tsx`).
 
 ## Local development
 
@@ -47,7 +52,7 @@ No service-role key is used anywhere. Account deletion uses the `delete_my_accou
 ## Supabase setup
 
 1. Create a project at supabase.com.
-2. Run the migration in `supabase/migrations/` — paste it into the SQL editor, or `npx supabase link --project-ref <ref>` then `npx supabase db push` (needs the database password).
+2. Run every migration in `supabase/migrations/` in order (schema, profile appearance columns, `rls_auto_enable` lock-down, foreign-key indexes) — paste them into the SQL editor, or `npx supabase link --project-ref <ref>` then `npx supabase db push` (needs the database password).
 3. **Authentication → URL Configuration**: set *Site URL* to your deployment URL and add `https://<your-domain>/**` and `http://localhost:3000/**` to *Redirect URLs*.
 4. **Authentication → Email Templates**: point links at the token-hash route so they work across devices:
    - Confirm signup: `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/onboarding`
@@ -62,13 +67,18 @@ No service-role key is used anywhere. Account deletion uses the `delete_my_accou
 - Server actions authenticate with `auth.getUser()`, validate with Zod, and map database errors to safe messages.
 - Notes are rendered only in the browser through DOMPurify; CSV export neutralizes spreadsheet formulas; post-login redirects are same-origin only; security headers are set in `next.config.ts`.
 
+## Hosting notes
+
+- `vercel.json` pins functions to `bom1` (Mumbai) so they sit next to a Supabase project in `ap-south-1`. Change it to the region closest to your own Supabase project.
+- `next.config.ts` sets a Content-Security-Policy limited to this origin and your Supabase project (plus Cloudflare's analytics beacon when proxied by Cloudflare), HSTS, frame, referrer and permissions headers.
+
 ## Tests
 
 ```bash
-npm run lint && npm run typecheck
+npm run lint && npm run typecheck   # typecheck runs `next typegen` first (typed routes)
 npm test            # unit: dates/timezones, recurrence, habit streaks, money, budgets, analytics, CSV, redirects
 npm run test:rls    # throwaway local Postgres: applies migrations, proves cross-user isolation & constraints
-npm run test:e2e    # Playwright against the Supabase project in .env.local (see below)
+npm run test:e2e    # Playwright against the Supabase project in .env.local (see below): auth, CRUD, isolation, calendar, appearance, accessibility (axe, light + dark), mobile
 ```
 
 E2E uses `scripts/e2e-admin.mjs` to create/delete confirmed `e2e-*@example.test` users through the Supabase Management API (set `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF`, `E2E_STAMP`; no emails are sent). Run it only against a project you're happy to create temporary test users in; the script deletes them afterwards. Never commit tokens.
