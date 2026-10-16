@@ -49,7 +49,7 @@ export async function proxy(request: NextRequest) {
   if (!signedIn && !isPublic(pathname)) {
     return redirectTo("/login", `?next=${encodeURIComponent(pathname + request.nextUrl.search)}`);
   }
-  if (signedIn && (pathname === "/" || AUTH_ONLY_PAGES.includes(pathname))) {
+  if (signedIn && AUTH_ONLY_PAGES.includes(pathname)) {
     return redirectTo("/dashboard");
   }
   return response;

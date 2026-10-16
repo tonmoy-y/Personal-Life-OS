@@ -5,7 +5,7 @@ export default function AuthLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="paper-grain grid min-h-dvh lg:grid-cols-[1.1fr_1fr]">
       <aside className="relative hidden flex-col justify-between overflow-hidden bg-primary p-12 text-primary-foreground lg:flex">
-        <Logo className="text-primary-foreground" />
+        <Link href="/" aria-label="Back to home page"><Logo className="text-primary-foreground" /></Link>
         <div className="max-w-md">
           <p className="font-heading text-4xl font-semibold leading-tight text-balance">One calm place for the things that make up your life.</p>
           <p className="mt-4 text-primary-foreground/80">Tasks, calendar, habits, goals, projects, notes and money — private to you, protected by row-level security, and free of paid AI.</p>
