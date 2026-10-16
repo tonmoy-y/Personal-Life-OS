@@ -1,69 +1,54 @@
-import Image from "next/image";
+import Link from "next/link";
+import { BarChart3, CalendarDays, Flame, ListChecks, NotebookText, ShieldCheck, Target, Wallet } from "lucide-react";
+import { Logo } from "@/components/layout/logo";
+import { Button } from "@/components/ui/button";
+
+const FEATURES = [
+  { icon: ListChecks, title: "Tasks that repeat correctly", text: "Priorities, projects, recurrence rules, list and board views." },
+  { icon: CalendarDays, title: "A calendar that knows your timezone", text: "Month, week and agenda views with deadlines in one place." },
+  { icon: Flame, title: "Honest habit streaks", text: "Streaks follow each habit’s own schedule and your local date." },
+  { icon: Target, title: "Goals you can measure", text: "Targets, milestones and a progress history you can look back on." },
+  { icon: NotebookText, title: "A Markdown knowledge vault", text: "Tag, pin and link notes — with conflict-safe autosave." },
+  { icon: Wallet, title: "Money without the noise", text: "Income, expenses and budgets. No bank connections, ever." },
+  { icon: BarChart3, title: "Analytics from real records", text: "Every chart states exactly how it is calculated." },
+  { icon: ShieldCheck, title: "Private by design", text: "Row-level security on every table. Export or delete any time." },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="paper-grain min-h-dvh">
+      <header className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
+        <Logo />
+        <nav aria-label="Account" className="flex items-center gap-2">
+          <Button variant="ghost" asChild><Link href="/login">Sign in</Link></Button>
+          <Button asChild><Link href="/signup">Get started</Link></Button>
+        </nav>
+      </header>
+      <main id="main">
+        <section className="mx-auto max-w-4xl px-5 pb-16 pt-14 text-center sm:pt-24">
+          <p className="mb-4 inline-block rounded-full border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">Free · private · no paid AI required</p>
+          <h1 className="text-balance text-5xl font-semibold leading-[1.05] sm:text-7xl">Run your life from <em className="text-primary not-italic">one calm place</em>.</h1>
+          <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-muted-foreground">Personal Life OS brings your tasks, calendar, habits, goals, projects, notes and money together — a focused workspace that is yours alone.</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Button size="lg" className="h-11 px-6 text-base" asChild><Link href="/signup">Create your account</Link></Button>
+            <Button size="lg" variant="outline" className="h-11 px-6 text-base" asChild><Link href="/login">Sign in</Link></Button>
+          </div>
+        </section>
+        <section aria-label="Features" className="mx-auto max-w-6xl px-5 pb-20">
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {FEATURES.map((f) => (
+              <li key={f.title} className="rounded-2xl border bg-card p-5">
+                <div className="mb-3 flex size-9 items-center justify-center rounded-lg bg-accent text-accent-foreground"><f.icon className="size-5" aria-hidden /></div>
+                <h2 className="font-sans text-base font-semibold">{f.title}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">{f.text}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
       </main>
+      <footer className="border-t py-6 text-center text-sm text-muted-foreground">
+        <Link href="/privacy" className="underline-offset-4 hover:underline">Privacy notice</Link>
+      </footer>
     </div>
   );
 }
