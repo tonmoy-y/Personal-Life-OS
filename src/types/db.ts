@@ -8,6 +8,12 @@ export type GoalStatus = "active" | "completed" | "abandoned";
 export type GoalHorizon = "short" | "long";
 export type TxnType = "income" | "expense";
 export type ThemePref = "light" | "dark" | "system";
+export type Accent = "teal" | "indigo" | "rose" | "amber" | "emerald" | "violet" | "slate";
+export type Density = "comfortable" | "compact";
+export type TextSize = "sm" | "md" | "lg";
+export type Corners = "sharp" | "round" | "pill";
+export type TimeFormat = "12h" | "24h";
+export type CalendarViewPref = "month" | "week" | "agenda";
 
 export interface Profile {
   id: string;
@@ -16,6 +22,12 @@ export interface Profile {
   currency: string;
   week_start: number;
   theme: ThemePref;
+  accent: Accent;
+  density: Density;
+  text_size: TextSize;
+  corners: Corners;
+  time_format: TimeFormat;
+  calendar_view: CalendarViewPref;
   dashboard_widgets: string[];
   onboarded: boolean;
   created_at: string;

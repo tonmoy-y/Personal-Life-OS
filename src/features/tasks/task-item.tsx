@@ -15,7 +15,7 @@ import type { Task } from "@/types/db";
 import { TaskFormDialog } from "./task-form-dialog";
 import { useTaskActions } from "./use-task-actions";
 
-export function dueLabel(task: Pick<Task, "due_date" | "due_time">, tz: string): string | null {
+export function dueLabel(task: Pick<Task, "due_date" | "due_time">, tz: string, tf: "12h" | "24h" = "12h"): string | null {
   if (!task.due_date) return null;
   const today = todayIn(tz);
   const day =
@@ -23,7 +23,7 @@ export function dueLabel(task: Pick<Task, "due_date" | "due_time">, tz: string):
     : task.due_date === addDays(today, 1) ? "Tomorrow"
     : task.due_date === addDays(today, -1) ? "Yesterday"
     : formatLocalDate(task.due_date, { month: "short", day: "numeric", ...(task.due_date.slice(0, 4) !== today.slice(0, 4) ? { year: "numeric" } : {}) });
-  return task.due_time ? `${day}, ${formatTime(task.due_time)}` : day;
+  return task.due_time ? `${day}, ${formatTime(task.due_time, tf)}` : day;
 }
 
 export function TaskItem({ task, compact = false, showProject = true, draggable = false }: { task: Task; compact?: boolean; showProject?: boolean; draggable?: boolean }) {
@@ -34,7 +34,7 @@ export function TaskItem({ task, compact = false, showProject = true, draggable 
   const done = task.status === "done";
   const overdue = !done && isOverdue(task, profile.timezone);
   const project = projects.find((p) => p.id === task.project_id);
-  const label = dueLabel(task, profile.timezone);
+  const label = dueLabel(task, profile.timezone, profile.time_format);
 
   return (
     <li

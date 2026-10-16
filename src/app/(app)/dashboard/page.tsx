@@ -16,8 +16,8 @@ export default async function DashboardPage() {
   const widgets = profile.dashboard_widgets;
   return (
     <>
-      <PageHeader eyebrow={formatLocalDate(d.today, { weekday: "long", month: "long", day: "numeric", year: "numeric" })} title={`${greetingFor(profile.timezone)}${name ? `, ${name}` : ""}`} description={widgets.includes("summary") ? <DailySummary d={d} tz={profile.timezone} /> : undefined} />
-      <DashboardWidgets d={d} widgets={widgets} tz={profile.timezone} currency={profile.currency} />
+      <PageHeader eyebrow={formatLocalDate(d.today, { weekday: "long", month: "long", day: "numeric", year: "numeric" })} title={`${greetingFor(profile.timezone)}${name ? `, ${name}` : ""}`} description={widgets.includes("summary") ? <DailySummary d={d} tz={profile.timezone} tf={profile.time_format} /> : undefined} />
+      <DashboardWidgets d={d} widgets={widgets} tz={profile.timezone} currency={profile.currency} tf={profile.time_format} />
     </>
   );
 }

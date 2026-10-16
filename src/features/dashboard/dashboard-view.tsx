@@ -23,18 +23,18 @@ function Card({ title, href, hrefLabel, children, className, id }: { title: stri
   );
 }
 
-export function DailySummary({ d, tz }: { d: DashboardData; tz: string }) {
+export function DailySummary({ d, tz, tf = "12h" }: { d: DashboardData; tz: string; tf?: "12h" | "24h" }) {
   const parts: string[] = [];
   const nOpen = d.openToday.length;
   parts.push(nOpen === 0 ? "No open tasks due today" : `${nOpen} task${nOpen > 1 ? "s" : ""} due today${d.minutesPlanned ? ` (~${Math.round((d.minutesPlanned / 60) * 10) / 10}h planned)` : ""}`);
   if (d.overdueTasks.length) parts.push(`${d.overdueTasks.length} overdue`);
   if (d.dueHabits.length) parts.push(`${d.habitsDone} of ${d.dueHabits.length} habits done`);
   const next = d.upcomingEvents[0];
-  if (next) { const s = utcToLocal(next.start_at, tz); parts.push(`next event “${next.title}” ${s.date === d.today ? "at " + formatTime(s.time) : "on " + formatLocalDate(s.date)}`); }
+  if (next) { const s = utcToLocal(next.start_at, tz); parts.push(`next event “${next.title}” ${s.date === d.today ? "at " + formatTime(s.time, tf) : "on " + formatLocalDate(s.date)}`); }
   return <p className="text-pretty text-sm leading-relaxed text-muted-foreground">{parts.join(" · ")}.</p>;
 }
 
-export function DashboardWidgets({ d, widgets, tz, currency, fullTasks = false }: { d: DashboardData; widgets: string[]; tz: string; currency: string; fullTasks?: boolean }) {
+export function DashboardWidgets({ d, widgets, tz, currency, tf = "12h", fullTasks = false }: { d: DashboardData; widgets: string[]; tz: string; currency: string; tf?: "12h" | "24h"; fullTasks?: boolean }) {
   const show = (id: string) => widgets.includes(id);
   const money = (n: number) => formatMoney(n, currency);
   const over = d.budgets.filter((b) => b.over);
@@ -70,7 +70,7 @@ export function DashboardWidgets({ d, widgets, tz, currency, fullTasks = false }
                   return (
                     <li key={e.id} className="flex items-start gap-2.5 text-sm">
                       <CalendarClock className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
-                      <span className="min-w-0"><span className="block truncate font-medium">{e.title}</span><span className="text-xs text-muted-foreground">{s.date === d.today ? "Today" : formatLocalDate(s.date, { weekday: "short", month: "short", day: "numeric" })}{e.all_day ? " · All day" : ` · ${formatTime(s.time)}`}</span></span>
+                      <span className="min-w-0"><span className="block truncate font-medium">{e.title}</span><span className="text-xs text-muted-foreground">{s.date === d.today ? "Today" : formatLocalDate(s.date, { weekday: "short", month: "short", day: "numeric" })}{e.all_day ? " · All day" : ` · ${formatTime(s.time, tf)}`}</span></span>
                     </li>
                   );
                 })}

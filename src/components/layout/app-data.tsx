@@ -3,7 +3,7 @@ import { createContext, useContext, type ReactNode } from "react";
 import type { Profile } from "@/types/db";
 
 export interface AppData {
-  profile: Pick<Profile, "id" | "display_name" | "timezone" | "currency" | "week_start" | "theme">;
+  profile: Pick<Profile, "id" | "display_name" | "timezone" | "currency" | "week_start" | "theme" | "time_format" | "calendar_view">;
   email: string;
   projects: { id: string; title: string; color: string | null }[];
   goals: { id: string; title: string }[];

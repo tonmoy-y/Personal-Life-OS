@@ -153,8 +153,9 @@ export function formatLocalDate(date: LocalDate, opts: Intl.DateTimeFormatOption
   return new Intl.DateTimeFormat("en-US", { timeZone: "UTC", ...opts }).format(new Date(toMs(date)));
 }
 
-export function formatTime(time: string): string {
+export function formatTime(time: string, fmt: "12h" | "24h" = "12h"): string {
   const [h, m] = time.split(":").map(Number);
+  if (fmt === "24h") return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
   const ampm = h >= 12 ? "PM" : "AM";
   return `${((h + 11) % 12) + 1}:${String(m).padStart(2, "0")} ${ampm}`;
 }

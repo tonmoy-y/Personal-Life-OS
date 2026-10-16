@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
-import { CalendarDays, CheckSquare2, ChevronLeft, ChevronRight, Flag, Plus, Target } from "lucide-react";
+import Link, { useLinkStatus } from "next/link";
+import { CalendarDays, CheckSquare2, ChevronLeft, ChevronRight, Flag, Loader2, Plus, Target } from "lucide-react";
 import { EmptyState } from "@/components/common/empty-state";
 import { useAppData } from "@/components/layout/app-data";
 import { Button } from "@/components/ui/button";
@@ -23,11 +23,31 @@ const KIND_STYLE: Record<CalItem["kind"], string> = {
 };
 const KIND_LABEL: Record<CalItem["kind"], string> = { event: "Event", task: "Task due", project: "Project deadline", milestone: "Milestone", goal: "Goal target" };
 
+function Pending({ children }: { children: React.ReactNode }) {
+  const { pending } = useLinkStatus();
+  return pending ? <Loader2 className="animate-spin" aria-label="Loading" /> : <>{children}</>;
+}
+
+function Chip({ it, tf, onOpen }: { it: CalItem; tf: "12h" | "24h"; onOpen: (it: CalItem) => void }) {
+  const label = `${KIND_LABEL[it.kind]}: ${it.title}${it.time ? ` at ${formatTime(it.time, tf)}` : ""}${it.done ? " (done)" : ""}`;
+  const cls = cn("flex w-full items-center gap-1 truncate rounded-md border px-1.5 py-0.5 text-left text-xs transition-colors hover:brightness-95", KIND_STYLE[it.kind], it.done && "line-through opacity-60");
+  const inner = (<>
+    {it.kind === "task" && <CheckSquare2 className="size-3 shrink-0" aria-hidden />}
+    {it.kind === "goal" && <Target className="size-3 shrink-0" aria-hidden />}
+    {(it.kind === "project" || it.kind === "milestone") && <Flag className="size-3 shrink-0" aria-hidden />}
+    {it.time && <span className="shrink-0 tabular opacity-80">{formatTime(it.time, tf)}</span>}
+    <span className="truncate">{it.title}</span>
+  </>);
+  return it.href ? <Link href={it.href} className={cls} aria-label={label} title={label}>{inner}</Link>
+    : <button type="button" onClick={(e) => { e.stopPropagation(); onOpen(it); }} className={cls} aria-label={label} title={label}>{inner}</button>;
+}
+
 export function CalendarView({ view, anchor, items }: { view: CalView; anchor: LocalDate; items: CalItem[] }) {
   const { profile } = useAppData();
   const today = todayIn(profile.timezone);
   const [eventDlg, setEventDlg] = useState<{ event: CalendarEvent | null; date?: string } | null>(null);
-  const [task, setTask] = useState<Task | null>(null);
+  const [task, setTask] = useState<{ task: Task | null; date?: string } | null>(null);
+  const tf = profile.time_format;
 
   const href = (v: CalView, date: LocalDate) => `/calendar?view=${v}&date=${date}`;
   const step = view === "month" ? { prev: addMonths(monthStart(anchor), -1), next: addMonths(monthStart(anchor), 1) } : view === "week" ? { prev: addDays(anchor, -7), next: addDays(anchor, 7) } : { prev: addDays(anchor, -30), next: addDays(anchor, 30) };
@@ -41,22 +61,8 @@ export function CalendarView({ view, anchor, items }: { view: CalView; anchor: L
 
   function open(it: CalItem) {
     if (it.kind === "event" && it.event) setEventDlg({ event: it.event });
-    else if (it.kind === "task" && it.task) setTask(it.task);
+    else if (it.kind === "task" && it.task) setTask({ task: it.task });
   }
-
-  const Chip = ({ it }: { it: CalItem }) => {
-    const label = `${KIND_LABEL[it.kind]}: ${it.title}${it.time ? ` at ${formatTime(it.time)}` : ""}${it.done ? " (done)" : ""}`;
-    const cls = cn("flex w-full items-center gap-1 truncate rounded-md border px-1.5 py-0.5 text-left text-xs", KIND_STYLE[it.kind], it.done && "line-through opacity-60");
-    const inner = (<>
-      {it.kind === "task" && <CheckSquare2 className="size-3 shrink-0" aria-hidden />}
-      {it.kind === "goal" && <Target className="size-3 shrink-0" aria-hidden />}
-      {(it.kind === "project" || it.kind === "milestone") && <Flag className="size-3 shrink-0" aria-hidden />}
-      {it.time && <span className="shrink-0 tabular opacity-80">{formatTime(it.time)}</span>}
-      <span className="truncate">{it.title}</span>
-    </>);
-    return it.href ? <Link href={it.href} className={cls} aria-label={label} title={label}>{inner}</Link>
-      : <button type="button" onClick={() => open(it)} className={cls} aria-label={label} title={label}>{inner}</button>;
-  };
 
   const weekdayNames = eachDay(startOfWeek("2026-03-08", profile.week_start), addDays(startOfWeek("2026-03-08", profile.week_start), 6)).map((d) => formatLocalDate(d, { weekday: "short" }));
 
@@ -64,19 +70,20 @@ export function CalendarView({ view, anchor, items }: { view: CalView; anchor: L
     <div className="grid gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1.5">
-          <Button asChild variant="outline" size="icon" aria-label="Previous"><Link href={href(view, step.prev)}><ChevronLeft /></Link></Button>
-          <Button asChild variant="outline" size="icon" aria-label="Next"><Link href={href(view, step.next)}><ChevronRight /></Link></Button>
-          <Button asChild variant="outline"><Link href={href(view, today)}>Today</Link></Button>
+          <Button asChild variant="outline" size="icon" aria-label="Previous"><Link href={href(view, step.prev)}><Pending><ChevronLeft /></Pending></Link></Button>
+          <Button asChild variant="outline" size="icon" aria-label="Next"><Link href={href(view, step.next)}><Pending><ChevronRight /></Pending></Link></Button>
+          <Button asChild variant="outline"><Link href={href(view, today)}><Pending>Today</Pending></Link></Button>
           <h2 className="ml-2 text-xl font-semibold" aria-live="polite">{title}</h2>
         </div>
         <div className="flex items-center gap-2">
           <nav aria-label="Calendar view" className="flex gap-1 rounded-xl bg-muted p-1">
             {(["month", "week", "agenda"] as const).map((v) => (
               <Link key={v} href={href(v, anchor)} aria-current={view === v ? "page" : undefined}
-                className={cn("rounded-lg px-3 py-1.5 text-sm font-medium capitalize", view === v ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground")}>{v}</Link>
+                className={cn("rounded-lg px-3 py-1.5 text-sm font-medium capitalize", view === v ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground")}><Pending>{v}</Pending></Link>
             ))}
           </nav>
-          <Button onClick={() => setEventDlg({ event: null, date: today })}><Plus /> New event</Button>
+          <Button variant="outline" onClick={() => setTask({ task: null, date: anchor })}><CheckSquare2 /> New task</Button>
+          <Button onClick={() => setEventDlg({ event: null, date: anchor })}><Plus /> New event</Button>
         </div>
       </div>
 
@@ -95,14 +102,14 @@ export function CalendarView({ view, anchor, items }: { view: CalView; anchor: L
                 const list = byDay.get(d) ?? [];
                 const inMonth = d.slice(0, 7) === anchor.slice(0, 7);
                 return (
-                  <div key={d} role="gridcell" className={cn("group min-h-24 border-b border-r p-1 sm:min-h-28", !inMonth && "bg-muted/30 text-muted-foreground")}>
-                    <button type="button" onClick={() => setEventDlg({ event: null, date: d })} aria-label={`Add event on ${formatLocalDate(d, { weekday: "long", month: "long", day: "numeric" })}`}
+                  <div key={d} role="gridcell" onClick={() => setEventDlg({ event: null, date: d })} className={cn("group min-h-24 cursor-pointer border-b border-r p-1 transition-colors hover:bg-accent/40 sm:min-h-28", !inMonth && "bg-muted/30 text-muted-foreground")}>
+                    <button type="button" onClick={(e) => { e.stopPropagation(); setEventDlg({ event: null, date: d }); }} aria-label={`Add event on ${formatLocalDate(d, { weekday: "long", month: "long", day: "numeric" })}`}
                       className={cn("mb-1 flex size-6 items-center justify-center rounded-full text-xs tabular hover:bg-accent", d === today && "bg-primary font-semibold text-primary-foreground hover:bg-primary")}>
                       {Number(d.slice(8))}
                     </button>
                     <ul className="grid gap-0.5">
-                      {list.slice(0, 3).map((it) => <li key={it.id}><Chip it={it} /></li>)}
-                      {list.length > 3 && <li><Link href={href("agenda", d)} className="px-1 text-xs text-muted-foreground hover:underline">+{list.length - 3} more</Link></li>}
+                      {list.slice(0, 3).map((it) => <li key={it.id}><Chip it={it} tf={tf} onOpen={open} /></li>)}
+                      {list.length > 3 && <li><Link href={href("agenda", d)} onClick={(e) => e.stopPropagation()} className="px-1 text-xs text-muted-foreground hover:underline">+{list.length - 3} more</Link></li>}
                     </ul>
                   </div>
                 );
@@ -120,7 +127,7 @@ export function CalendarView({ view, anchor, items }: { view: CalView; anchor: L
                 <span className="text-sm font-medium">{formatLocalDate(d, { weekday: "short", day: "numeric" })}</span>
                 <Button variant="ghost" size="icon-xs" aria-label={`Add event on ${formatLocalDate(d)}`} onClick={() => setEventDlg({ event: null, date: d })}><Plus /></Button>
               </header>
-              <ul className="grid gap-1">{(byDay.get(d) ?? []).map((it) => <li key={it.id}><Chip it={it} /></li>)}</ul>
+              <ul className="grid gap-1">{(byDay.get(d) ?? []).map((it) => <li key={it.id}><Chip it={it} tf={tf} onOpen={open} /></li>)}</ul>
               {!(byDay.get(d)?.length) && <p className="px-1 text-xs text-muted-foreground">Nothing scheduled</p>}
             </section>
           ))}
@@ -139,8 +146,8 @@ export function CalendarView({ view, anchor, items }: { view: CalView; anchor: L
                 <ul className="grid gap-1.5">
                   {list.map((it) => (
                     <li key={it.id} className="flex items-center gap-2 text-sm">
-                      <span className="w-20 shrink-0 text-xs text-muted-foreground tabular">{it.time ? `${formatTime(it.time)}${it.endTime ? `–${formatTime(it.endTime)}` : ""}` : "All day"}</span>
-                      <div className="min-w-0 flex-1"><Chip it={it} /></div>
+                      <span className="w-20 shrink-0 text-xs text-muted-foreground tabular">{it.time ? `${formatTime(it.time, tf)}${it.endTime ? `–${formatTime(it.endTime, tf)}` : ""}` : "All day"}</span>
+                      <div className="min-w-0 flex-1"><Chip it={it} tf={tf} onOpen={open} /></div>
                     </li>
                   ))}
                 </ul>
@@ -151,7 +158,7 @@ export function CalendarView({ view, anchor, items }: { view: CalView; anchor: L
       )}
 
       <EventFormDialog open={!!eventDlg} onOpenChange={(o) => !o && setEventDlg(null)} event={eventDlg?.event ?? null} date={eventDlg?.date} />
-      {task && <TaskFormDialog open onOpenChange={(o) => !o && setTask(null)} task={task} />}
+      {task && <TaskFormDialog open onOpenChange={(o) => !o && setTask(null)} task={task.task} preset={task.date ? { due_date: task.date } : undefined} />}
     </div>
   );
 }

@@ -13,8 +13,8 @@ export default async function TodayPage() {
   const d = await loadDashboard(supabase, profile.timezone, profile.currency);
   return (
     <>
-      <PageHeader eyebrow="Today" title={formatLocalDate(d.today, { weekday: "long", month: "long", day: "numeric" })} description={<DailySummary d={d} tz={profile.timezone} />} />
-      <DashboardWidgets d={d} widgets={["tasks", "events", "habits"]} tz={profile.timezone} currency={profile.currency} fullTasks />
+      <PageHeader eyebrow="Today" title={formatLocalDate(d.today, { weekday: "long", month: "long", day: "numeric" })} description={<DailySummary d={d} tz={profile.timezone} tf={profile.time_format} />} />
+      <DashboardWidgets d={d} widgets={["tasks", "events", "habits"]} tz={profile.timezone} currency={profile.currency} tf={profile.time_format} fullTasks />
     </>
   );
 }

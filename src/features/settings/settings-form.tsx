@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bell, Download, LogOut, Trash2 } from "lucide-react";
+import { Bell, Check, Download, LogOut, Trash2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { signOut } from "@/app/(auth)/actions";
@@ -12,9 +12,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { CURRENCIES } from "@/lib/money";
-import type { Profile } from "@/types/db";
+import { cn } from "@/lib/utils";
+import type { Accent, Profile } from "@/types/db";
 import { deleteAccount, updateProfile } from "./actions";
 import { profileInputSchema, WIDGETS } from "./schema";
+
+const ACCENT_OPTIONS: { id: Accent; label: string; swatch: string }[] = [
+  { id: "teal", label: "Teal", swatch: "oklch(0.5 0.1 185)" }, { id: "indigo", label: "Indigo", swatch: "oklch(0.5 0.17 268)" },
+  { id: "rose", label: "Rose", swatch: "oklch(0.58 0.19 10)" }, { id: "amber", label: "Amber", swatch: "oklch(0.62 0.15 62)" },
+  { id: "emerald", label: "Emerald", swatch: "oklch(0.52 0.13 155)" }, { id: "violet", label: "Violet", swatch: "oklch(0.52 0.18 295)" },
+  { id: "slate", label: "Slate", swatch: "oklch(0.42 0.03 255)" },
+];
+
+function Segmented<T extends string>({ label, value, onChange, options }: { label: string; value: T; onChange: (v: T) => void; options: [T, string][] }) {
+  return (
+    <fieldset className="grid gap-1.5">
+      <legend className="mb-1 text-sm font-medium">{label}</legend>
+      <div role="radiogroup" aria-label={label} className="flex gap-1 rounded-xl bg-muted p-1">
+        {options.map(([id, text]) => (
+          <button key={id} type="button" role="radio" aria-checked={value === id} onClick={() => onChange(id)}
+            className={cn("flex-1 rounded-lg px-2 py-1.5 text-sm font-medium", value === id ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground")}>{text}</button>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
 
 const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -27,7 +49,8 @@ export function SettingsForm({ profile, widgets }: { profile: Profile; widgets: 
   const { exec, pending } = useAction();
   const [v, setV] = useState({
     display_name: profile.display_name ?? "", timezone: profile.timezone, currency: profile.currency, week_start: profile.week_start,
-    theme: profile.theme, dashboard_widgets: widgets,
+    theme: profile.theme, accent: profile.accent, density: profile.density, text_size: profile.text_size, corners: profile.corners,
+    time_format: profile.time_format, calendar_view: profile.calendar_view, dashboard_widgets: widgets,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const zones = timeZones();
@@ -60,6 +83,29 @@ export function SettingsForm({ profile, widgets }: { profile: Profile; widgets: 
           <Field id="st-theme" label="Theme">
             <select id="st-theme" className={selectClass} value={v.theme} onChange={(e) => { set("theme", e.target.value as Profile["theme"]); setTheme(e.target.value); }}><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select>
           </Field>
+        </div>
+      </section>
+
+      <section aria-labelledby="st-look" className="grid gap-5 rounded-2xl border bg-card p-5">
+        <h2 id="st-look" className="text-xl font-semibold">Appearance</h2>
+        <fieldset className="grid gap-2">
+          <legend className="mb-1 text-sm font-medium">Accent colour</legend>
+          <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Accent colour">
+            {ACCENT_OPTIONS.map((a) => (
+              <button key={a.id} type="button" role="radio" aria-checked={v.accent === a.id} aria-label={a.label} title={a.label} onClick={() => set("accent", a.id)}
+                className={cn("flex size-9 items-center justify-center rounded-full ring-offset-2 ring-offset-card transition", v.accent === a.id ? "ring-2 ring-foreground" : "hover:scale-110")} style={{ background: a.swatch }}>
+                {v.accent === a.id && <Check className="size-4 text-white" aria-hidden />}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground">Preview applies after you save.</p>
+        </fieldset>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Segmented label="Text size" value={v.text_size} onChange={(x) => set("text_size", x)} options={[["sm", "Small"], ["md", "Default"], ["lg", "Large"]]} />
+          <Segmented label="Density" value={v.density} onChange={(x) => set("density", x)} options={[["comfortable", "Comfortable"], ["compact", "Compact"]]} />
+          <Segmented label="Corners" value={v.corners} onChange={(x) => set("corners", x)} options={[["sharp", "Sharp"], ["round", "Rounded"], ["pill", "Extra round"]]} />
+          <Segmented label="Time format" value={v.time_format} onChange={(x) => set("time_format", x)} options={[["12h", "12-hour"], ["24h", "24-hour"]]} />
+          <Segmented label="Calendar opens in" value={v.calendar_view} onChange={(x) => set("calendar_view", x)} options={[["month", "Month"], ["week", "Week"], ["agenda", "Agenda"]]} />
         </div>
       </section>
 
