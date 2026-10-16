@@ -42,16 +42,14 @@ export function DashboardHero({ d, eyebrow, title, tz, tf, currency, summary }: 
     { label: "Spent this month", value: formatMoney(d.spend.expense, currency), href: "/finance", icon: Wallet, tone: "" },
   ];
   return (
-    <section aria-label="Overview" className="rise-in relative mb-6 overflow-hidden rounded-3xl border bg-card p-6 sm:p-8">
-      <div aria-hidden className="pointer-events-none absolute -right-24 -top-28 size-80 rounded-full bg-primary/10 blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute -bottom-32 left-1/3 size-72 rounded-full bg-chart-2/10 blur-3xl" />
+    <section aria-label="Overview" className="rise-in glass-backdrop relative mb-6 overflow-hidden rounded-3xl border bg-card p-6 sm:p-8">
       <p className="relative text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">{eyebrow}</p>
       <h1 className="relative mt-2 text-balance text-5xl leading-[1.02] sm:text-6xl">{title}</h1>
       {summary && <div className="relative mt-3 max-w-2xl"><DailySummary d={d} tz={tz} tf={tf} /></div>}
       <ul className="relative mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {stats.map((s) => (
           <li key={s.label}>
-            <Link href={s.href} className="group block rounded-2xl border bg-background/70 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:border-primary/40">
+            <Link href={s.href} className="glass group block rounded-2xl p-4 transition hover:-translate-y-0.5 hover:border-primary/40">
               <span className="flex items-center justify-between text-xs text-muted-foreground">{s.label}<s.icon className="size-4 transition group-hover:text-primary" aria-hidden /></span>
               <span className={cn("mt-2 block font-heading text-4xl leading-none tabular", s.tone)}>{s.value}</span>
             </Link>

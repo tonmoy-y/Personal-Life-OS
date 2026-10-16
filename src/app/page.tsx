@@ -32,7 +32,7 @@ function Preview() {
   return (
     <div aria-hidden className="relative mx-auto mt-16 max-w-5xl">
       <div className="absolute -inset-x-6 -inset-y-8 -z-10 rounded-[2.5rem] bg-gradient-to-b from-primary/20 via-primary/5 to-transparent blur-2xl" />
-      <div className="overflow-hidden rounded-3xl border bg-card shadow-2xl shadow-primary/10 ring-1 ring-foreground/5">
+      <div className="glass-backdrop overflow-hidden rounded-3xl border bg-card shadow-2xl shadow-primary/10 ring-1 ring-foreground/5">
         <div className="flex items-center gap-1.5 border-b bg-muted/60 px-4 py-3">
           <span className="size-2.5 rounded-full bg-destructive/60" /><span className="size-2.5 rounded-full bg-warning/70" /><span className="size-2.5 rounded-full bg-success/70" />
           <span className="mx-auto rounded-md bg-background px-10 py-0.5 text-[11px] text-muted-foreground">personallifeos.tonmoyy.dev</span>
@@ -43,12 +43,12 @@ function Preview() {
             <p className="mt-1 font-heading text-4xl leading-none sm:text-5xl">Good morning, <em>Jane Doe</em></p>
             <div className="mt-6 grid grid-cols-3 gap-3">
               {[["4", "Due today"], ["2/3", "Habits"], ["68%", "Goal"]].map(([n, l]) => (
-                <div key={l} className="rounded-2xl border bg-background/70 p-3"><p className="font-heading text-3xl leading-none">{n}</p><p className="mt-1 text-xs text-muted-foreground">{l}</p></div>
+                <div key={l} className="glass rounded-2xl p-3"><p className="font-heading text-3xl leading-none">{n}</p><p className="mt-1 text-xs text-muted-foreground">{l}</p></div>
               ))}
             </div>
             <ul className="mt-5 grid gap-2 text-sm">
               {["Plan the week", "Send project update", "Read 20 pages"].map((t, i) => (
-                <li key={t} className="flex items-center gap-3 rounded-xl border bg-background/70 px-3 py-2.5">
+                <li key={t} className="flex items-center gap-3 glass rounded-xl px-3 py-2.5">
                   <span className={`flex size-5 items-center justify-center rounded-full border ${i === 0 ? "border-primary bg-primary text-primary-foreground" : ""}`}>{i === 0 && <Check className="size-3" />}</span>
                   <span className={i === 0 ? "text-muted-foreground line-through" : ""}>{t}</span>
                 </li>
@@ -56,13 +56,13 @@ function Preview() {
             </ul>
           </div>
           <div className="grid content-start gap-3">
-            <div className="rounded-2xl border bg-background/70 p-4">
+            <div className="glass rounded-2xl p-4">
               <p className="text-xs text-muted-foreground">This month</p>
               <p className="font-heading text-3xl">৳ 18,400</p>
               <div className="mt-3 h-1.5 rounded-full bg-muted"><div className="h-full w-2/3 rounded-full bg-primary" /></div>
               <p className="mt-1.5 text-xs text-muted-foreground">66% of budget</p>
             </div>
-            <div className="rounded-2xl border bg-background/70 p-4">
+            <div className="glass rounded-2xl p-4">
               <p className="text-xs text-muted-foreground">Upcoming</p>
               <ul className="mt-2 grid gap-2 text-sm">
                 <li className="flex justify-between"><span>Design review</span><span className="text-muted-foreground">10:30</span></li>
