@@ -75,7 +75,7 @@ export function CalendarView({ view, anchor, items }: { view: CalView; anchor: L
           <Button asChild variant="outline"><Link href={href(view, today)} prefetch><Pending>Today</Pending></Link></Button>
           <h2 className="ml-2 text-2xl" aria-live="polite">{title}</h2>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <nav aria-label="Calendar view" className="flex gap-1 rounded-xl bg-muted p-1">
             {(["month", "week", "agenda"] as const).map((v) => (
               <Link key={v} href={href(v, anchor)} prefetch aria-current={view === v ? "page" : undefined}
@@ -93,16 +93,16 @@ export function CalendarView({ view, anchor, items }: { view: CalView; anchor: L
         const rows = Math.ceil((diffDays(monthEnd(anchor), start) + 1) / 7);
         const grid = days.slice(0, rows * 7);
         return (
-          <div className="overflow-hidden rounded-3xl border bg-card" role="grid" aria-label={title}>
-            <div className="grid grid-cols-7 border-b bg-muted/50 text-center text-xs font-medium text-muted-foreground" role="row">
-              {weekdayNames.map((n) => <div key={n} role="columnheader" className="py-2">{n}</div>)}
+          <div className="overflow-hidden rounded-3xl border bg-card" role="group" aria-label={title}>
+            <div className="grid grid-cols-[repeat(7,minmax(0,1fr))] border-b bg-muted/50 text-center text-xs font-medium text-muted-foreground">
+              {weekdayNames.map((n) => <div key={n} className="py-2">{n}</div>)}
             </div>
-            <div className="grid grid-cols-7">
+            <div className="grid grid-cols-[repeat(7,minmax(0,1fr))]">
               {grid.map((d) => {
                 const list = byDay.get(d) ?? [];
                 const inMonth = d.slice(0, 7) === anchor.slice(0, 7);
                 return (
-                  <div key={d} role="gridcell" onClick={() => setEventDlg({ event: null, date: d })} className={cn("group min-h-24 cursor-pointer border-b border-r p-1 transition-colors hover:bg-accent/40 sm:min-h-28", !inMonth && "bg-muted/30 text-muted-foreground")}>
+                  <div key={d} onClick={() => setEventDlg({ event: null, date: d })} className={cn("group min-h-24 cursor-pointer border-b border-r p-1 transition-colors hover:bg-accent/40 sm:min-h-28", !inMonth && "bg-muted/30 text-muted-foreground")}>
                     <button type="button" onClick={(e) => { e.stopPropagation(); setEventDlg({ event: null, date: d }); }} aria-label={`Add event on ${formatLocalDate(d, { weekday: "long", month: "long", day: "numeric" })}`}
                       className={cn("mb-1 flex size-6 items-center justify-center rounded-full text-xs tabular hover:bg-accent", d === today && "bg-primary font-semibold text-primary-foreground hover:bg-primary")}>
                       {Number(d.slice(8))}

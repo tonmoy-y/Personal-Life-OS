@@ -67,14 +67,14 @@ export function FinanceView({ filters, transactions, trendTxns, budgets, otherCu
   const money = (n: number) => formatMoney(n, cur);
 
   return (
-    <div className="grid gap-6">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
       {otherCurrencyCount > 0 && (
         <p role="note" className="rounded-xl border border-warning/40 bg-warning/10 p-3 text-sm">
           {otherCurrencyCount} transaction{otherCurrencyCount > 1 ? "s are" : " is"} recorded in a different currency than your current setting ({cur}) and {otherCurrencyCount > 1 ? "are" : "is"} excluded from these totals. Amounts are never converted.
         </p>
       )}
 
-      <div className="flex flex-wrap items-end gap-2" role="search" aria-label="Finance filters">
+      <div className="flex flex-wrap items-end gap-2 [&>*]:max-w-full" role="search" aria-label="Finance filters">
         {!filters.rangeMode ? (
           <div className="flex items-center gap-1">
             <Button variant="outline" size="icon" aria-label="Previous month" onClick={() => setParam({ month: addMonths(filters.month, -1).slice(0, 7), from: null, to: null })}><ChevronLeft /></Button>
@@ -183,7 +183,7 @@ export function FinanceView({ filters, transactions, trendTxns, budgets, otherCu
           <EmptyState icon={Wallet} title="No transactions in this period" description="Record income and expenses to see totals, budgets and trends. Nothing is imported automatically."
             action={<Button onClick={() => setCreating("expense")}><Plus /> Add transaction</Button>} />
         ) : (
-          <div className="overflow-x-auto rounded-3xl border bg-card">
+          <div className="relative overflow-x-auto rounded-3xl border bg-card">
             <table className="w-full min-w-[34rem] text-sm">
               <caption className="sr-only">Transactions for the selected period</caption>
               <thead className="border-b bg-muted/50 text-left text-xs text-muted-foreground"><tr><th scope="col" className="px-3 py-2 font-medium">Date</th><th scope="col" className="px-3 py-2 font-medium">Category</th><th scope="col" className="px-3 py-2 font-medium">Description</th><th scope="col" className="px-3 py-2 text-right font-medium">Amount</th><th scope="col" className="w-20 px-3 py-2"><span className="sr-only">Actions</span></th></tr></thead>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CalendarClock, CheckCircle2, Flame, Target, Wallet } from "lucide-react";
+import { ArrowRight, CalendarClock, CheckCircle2, Flame, Landmark, Target, Wallet } from "lucide-react";
 import { EmptyState } from "@/components/common/empty-state";
 import { Progress } from "@/components/ui/progress";
 import { formatLocalDate, formatTime, utcToLocal } from "@/lib/dates";
@@ -38,8 +38,8 @@ export function DashboardHero({ d, eyebrow, title, tz, tf, currency, summary }: 
   const stats = [
     { label: "Due today", value: String(d.openToday.length), href: "/tasks?view=today", icon: CheckCircle2, tone: "" },
     { label: "Overdue", value: String(d.overdueTasks.length), href: "/tasks?view=overdue", icon: CalendarClock, tone: d.overdueTasks.length ? "text-destructive" : "" },
-    { label: "Habits today", value: d.dueHabits.length ? `${d.habitsDone}/${d.dueHabits.length}` : "–", href: "/habits", icon: Flame, tone: "" },
-    { label: "Spent this month", value: formatMoney(d.spend.expense, currency), href: "/finance", icon: Wallet, tone: "" },
+    { label: "Balance this month", value: formatMoney(d.spend.net, currency), href: "/finance", icon: Landmark, tone: d.spend.net < 0 ? "text-destructive" : d.spend.net > 0 ? "text-success" : "" },
+    { label: "Spent this month", value: formatMoney(d.spend.expense, currency), sub: d.spend.income > 0 ? `Income ${formatMoney(d.spend.income, currency)}` : undefined, href: "/finance", icon: Wallet, tone: "" },
   ];
   return (
     <section aria-label="Overview" className="rise-in glass-backdrop relative mb-6 overflow-hidden rounded-3xl border bg-card p-6 sm:p-8">
@@ -52,6 +52,7 @@ export function DashboardHero({ d, eyebrow, title, tz, tf, currency, summary }: 
             <Link href={s.href} className="glass group block rounded-2xl p-4 transition hover:-translate-y-0.5 hover:border-primary/40">
               <span className="flex items-center justify-between text-xs text-muted-foreground">{s.label}<s.icon className="size-4 transition group-hover:text-primary" aria-hidden /></span>
               <span className={cn("mt-2 block font-heading text-4xl leading-none tabular", s.tone)}>{s.value}</span>
+              {"sub" in s && s.sub && <span className="mt-1 block text-xs text-success tabular">{s.sub}</span>}
             </Link>
           </li>
         ))}
