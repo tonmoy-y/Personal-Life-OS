@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { Bell, Check, Download, LogOut, Trash2 } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -44,6 +44,15 @@ export function timeZones(): string[] {
   try { return (Intl as unknown as { supportedValuesOf: (k: string) => string[] }).supportedValuesOf("timeZone"); } catch { return ["UTC", "Asia/Dhaka"]; }
 }
 
+let zoneCache: string[] | null = null;
+const noZones: string[] = [];
+const noopSubscribe = () => () => {};
+/** Timezone list for a <select>. Server/hydration render only the current zone (the host's Intl list can differ from the browser's), the full list follows after mount. */
+export function useTimeZones(current: string): string[] {
+  const all = useSyncExternalStore(noopSubscribe, () => (zoneCache ??= timeZones()), () => noZones);
+  return all.includes(current) ? all : [current, ...all];
+}
+
 export function SettingsForm({ profile, widgets }: { profile: Profile; widgets: string[] }) {
   const { setTheme } = useTheme();
   const { exec, pending } = useAction();
@@ -53,7 +62,7 @@ export function SettingsForm({ profile, widgets }: { profile: Profile; widgets: 
     time_format: profile.time_format, calendar_view: profile.calendar_view, dashboard_widgets: widgets,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const zones = timeZones();
+  const zones = useTimeZones(v.timezone);
   const set = <K extends keyof typeof v>(k: K, val: (typeof v)[K]) => setV((x) => ({ ...x, [k]: val }));
 
   async function save(e: React.FormEvent) {
@@ -72,7 +81,7 @@ export function SettingsForm({ profile, widgets }: { profile: Profile; widgets: 
         <div className="grid gap-4 sm:grid-cols-2">
           <Field id="st-name" label="Display name" error={errors.display_name}><Input id="st-name" value={v.display_name} maxLength={80} onChange={(e) => set("display_name", e.target.value)} /></Field>
           <Field id="st-tz" label="Timezone" error={errors.timezone} hint="Defines “today”, due times, streaks and reminders.">
-            <select id="st-tz" className={selectClass} value={v.timezone} onChange={(e) => set("timezone", e.target.value)}>{(zones.includes(v.timezone) ? zones : [v.timezone, ...zones]).map((z) => <option key={z}>{z}</option>)}</select>
+            <select id="st-tz" className={selectClass} value={v.timezone} onChange={(e) => set("timezone", e.target.value)}>{zones.map((z) => <option key={z}>{z}</option>)}</select>
           </Field>
           <Field id="st-cur" label="Currency" error={errors.currency} hint="Applies to new transactions and budgets. Existing amounts are never converted.">
             <select id="st-cur" className={selectClass} value={v.currency} onChange={(e) => set("currency", e.target.value)}>{(CURRENCIES as readonly string[]).includes(v.currency) ? null : <option>{v.currency}</option>}{CURRENCIES.map((c) => <option key={c}>{c}</option>)}</select>

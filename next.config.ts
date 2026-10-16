@@ -8,11 +8,11 @@ const supabaseWs = supabaseOrigin.replace(/^https:/, "wss:");
 // else is locked to same-origin plus the one Supabase project. Dev additionally needs eval for React refresh.
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isProd ? "" : " 'unsafe-eval'"}`,
+  `script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com${isProd ? "" : " 'unsafe-eval'"}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  `connect-src 'self' ${supabaseOrigin} ${supabaseWs}${isProd ? "" : " ws://localhost:* http://localhost:*"}`.trim(),
+  `connect-src 'self' ${supabaseOrigin} ${supabaseWs} https://cloudflareinsights.com${isProd ? "" : " ws://localhost:* http://localhost:*"}`.trim(),
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
