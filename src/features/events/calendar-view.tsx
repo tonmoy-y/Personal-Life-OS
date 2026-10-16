@@ -70,15 +70,15 @@ export function CalendarView({ view, anchor, items }: { view: CalView; anchor: L
     <div className="grid gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1.5">
-          <Button asChild variant="outline" size="icon" aria-label="Previous"><Link href={href(view, step.prev)}><Pending><ChevronLeft /></Pending></Link></Button>
-          <Button asChild variant="outline" size="icon" aria-label="Next"><Link href={href(view, step.next)}><Pending><ChevronRight /></Pending></Link></Button>
-          <Button asChild variant="outline"><Link href={href(view, today)}><Pending>Today</Pending></Link></Button>
+          <Button asChild variant="outline" size="icon" aria-label="Previous"><Link href={href(view, step.prev)} prefetch><Pending><ChevronLeft /></Pending></Link></Button>
+          <Button asChild variant="outline" size="icon" aria-label="Next"><Link href={href(view, step.next)} prefetch><Pending><ChevronRight /></Pending></Link></Button>
+          <Button asChild variant="outline"><Link href={href(view, today)} prefetch><Pending>Today</Pending></Link></Button>
           <h2 className="ml-2 text-xl font-semibold" aria-live="polite">{title}</h2>
         </div>
         <div className="flex items-center gap-2">
           <nav aria-label="Calendar view" className="flex gap-1 rounded-xl bg-muted p-1">
             {(["month", "week", "agenda"] as const).map((v) => (
-              <Link key={v} href={href(v, anchor)} aria-current={view === v ? "page" : undefined}
+              <Link key={v} href={href(v, anchor)} prefetch aria-current={view === v ? "page" : undefined}
                 className={cn("rounded-lg px-3 py-1.5 text-sm font-medium capitalize", view === v ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground")}><Pending>{v}</Pending></Link>
             ))}
           </nav>
