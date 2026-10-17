@@ -23,7 +23,9 @@ function emailBusy(error: { status?: number; code?: string; message?: string }):
 
 async function clientKey() {
   const h = await headers();
-  return (h.get("x-forwarded-for")?.split(",")[0] ?? h.get("x-real-ip") ?? "local").trim();
+  // Behind Cloudflare the connecting peer is Cloudflare's edge, so prefer the client IP it forwards. A client hitting the
+  // origin directly could forge this header, which is why per-address limits (below) back it up.
+  return (h.get("cf-connecting-ip") ?? h.get("x-forwarded-for")?.split(",")[0] ?? h.get("x-real-ip") ?? "local").trim();
 }
 
 async function origin() {
@@ -51,7 +53,7 @@ export async function signUp(_prev: AuthState, form: FormData): Promise<AuthStat
   const parsed = z.object({ email, password, name: z.string().trim().max(80).optional() }).safeParse({ email: form.get("email"), password: form.get("password"), name: form.get("name") || undefined });
   const fields = { email: String(form.get("email") ?? ""), name: String(form.get("name") ?? "") };
   if (!parsed.success) return { error: parsed.error.issues[0].message, fields };
-  if (!rateLimit(`signup:${await clientKey()}`, 5, 10 * 60_000)) return { error: "Too many sign-up attempts. Please try again later.", fields };
+  if (!rateLimit(`signup:${await clientKey()}`, 5, 10 * 60_000) || !rateLimit(`signup:addr:${parsed.data.email}`, 3, 30 * 60_000)) return { error: "Too many sign-up attempts. Please try again later.", fields };
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
@@ -67,7 +69,7 @@ export async function signUp(_prev: AuthState, form: FormData): Promise<AuthStat
 export async function requestPasswordReset(_prev: AuthState, form: FormData): Promise<AuthState> {
   const parsed = email.safeParse(form.get("email"));
   if (!parsed.success) return { error: "Enter a valid email address", fields: { email: String(form.get("email") ?? "") } };
-  if (!rateLimit(`reset:${await clientKey()}`, 5, 10 * 60_000)) return { error: "Too many requests. Please try again later.", fields: { email: parsed.data } };
+  if (!rateLimit(`reset:${await clientKey()}`, 5, 10 * 60_000) || !rateLimit(`reset:addr:${parsed.data}`, 3, 30 * 60_000)) return { error: "Too many requests. Please try again later.", fields: { email: parsed.data } };
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(parsed.data, { redirectTo: `${await origin()}/auth/confirm?next=/reset-password` });
   if (error && emailBusy(error)) return { error: EMAIL_BUSY, fields: { email: parsed.data } };

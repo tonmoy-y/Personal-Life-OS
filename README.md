@@ -5,7 +5,9 @@
 
 **Live app: [personallifeos.tonmoyy.dev](https://personallifeos.tonmoyy.dev)**
 
-A private, mobile-first workspace for one person's tasks, calendar, habits, goals, projects, notes and money. Built with Next.js 16 (App Router), TypeScript (strict), Tailwind v4, shadcn/ui, Supabase (Postgres, Auth, RLS) and Recharts. It runs entirely on free tiers: no paid plan, paid AI or third-party APIs are required.
+A private, mobile-first workspace for one person's tasks, calendar, habits, goals, projects, notes and money. It runs entirely on free tiers: no paid plan, paid AI or third-party APIs are required.
+
+> **About the live app:** it is a personal project on free infrastructure, with no uptime guarantee. Sign-ups are open, but please do not store anything you cannot afford to lose, and see [SECURITY.md](SECURITY.md) before testing it. Your own copy (see *Run your own copy*) gives you full control of your data.
 
 ## Features
 
@@ -33,6 +35,9 @@ Next.js 16 (App Router, Turbopack, typed routes, React Compiler), React 19, Type
 - No Google Calendar sync. No offline sync (the manifest enables installing the app; it does not make it work offline).
 - Rate limiting is best-effort in-memory per server instance; Supabase Auth's limits are authoritative.
 - Changing currency doesn't convert old amounts; other-currency transactions are excluded from totals and the UI says so.
+- Sign-up and password-reset emails go through a free SMTP plan with a daily cap. When it is reached, users see a "try again after some time" message.
+- Supabase free projects are paused after a period of inactivity; if you self-host, unpause the project before use.
+- Supabase's browser client keeps the session in cookies that scripts can read (that is how `@supabase/ssr` works). Protection against script injection therefore rests on DOMPurify for notes, the Content-Security-Policy, and having no other raw-HTML sinks.
 
 ## Design
 
@@ -44,8 +49,9 @@ This repository contains no secrets and no service-role key. To run your own ins
 
 1. Fork or clone the repo and create a Supabase project.
 2. Apply the SQL in `supabase/migrations/` in order (see *Supabase setup*).
-3. Put your project's URL and **publishable** key in `.env.local` (see `.env.example`).
-4. `npm run dev`, then deploy to Vercel with the same three variables. Change the region in `vercel.json` to match your Supabase region.
+3. Put your project's URL and **publishable** key in `.env.local` (copy `.env.example`). Never use a service-role or secret key here.
+4. Sign-up needs working email: either configure SMTP in Supabase, or, for local experiments only, turn off *Confirm email* under Authentication → Providers → Email.
+5. `npm run dev`, then deploy to Vercel with the same three variables. Change the region in `vercel.json` to match your Supabase region.
 
 The live instance above is my own deployment: it uses its own database, and accounts on it are separate from anything you run yourself.
 
@@ -121,5 +127,5 @@ Settings → **Your data** downloads a full JSON export or per-list CSVs (own re
 ## Contributing, security and license
 
 - Contributions are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md).
-- Found a vulnerability? Please read [SECURITY.md](SECURITY.md) and report it privately instead of opening a public issue.
+- Found a vulnerability? Please read [SECURITY.md](SECURITY.md) and report it privately (GitHub **Security → Report a vulnerability**) instead of opening a public issue.
 - Released under the [MIT License](LICENSE).
