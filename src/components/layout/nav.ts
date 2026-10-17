@@ -31,6 +31,7 @@ export const NAV_SECONDARY: NavItem[] = [
 
 export const ALL_NAV = [...NAV_MAIN, ...NAV_SECONDARY];
 
-export const SEGMENT_LABELS: Record<string, string> = Object.fromEntries(
-  ALL_NAV.map((n) => [n.href.slice(1), n.label]),
-);
+export const SEGMENT_LABELS: Record<string, string> = {
+  ...Object.fromEntries(ALL_NAV.map((n) => [n.href.slice(1), n.label])),
+  search: "Search",
+};

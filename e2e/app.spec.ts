@@ -200,6 +200,17 @@ test("toolbar controls (search, theme, account, quick add) open without crashing
   expect(errors).toEqual([]);
 });
 
+test("pressing Enter in search opens the full results page", async ({ page }) => {
+  await signIn(page, userA);
+  await page.waitForURL(/dashboard|today/);
+  await page.getByRole("button", { name: /Search and commands/ }).click();
+  await page.getByPlaceholder(/Search tasks/).fill("Write copy");
+  await expect(page.getByRole("option", { name: /Show all results/ })).toBeVisible();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/search\?q=Write(\+|%20)copy/);
+  await expect(page.getByRole("heading", { name: "Search", level: 1 })).toBeVisible();
+});
+
 test("user B cannot see user A's data", async ({ page }) => {
   await signIn(page, userB);
   await page.waitForURL(/\/onboarding/);

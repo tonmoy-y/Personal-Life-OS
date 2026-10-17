@@ -3,12 +3,14 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarDays, CheckSquare2, FileText, Flame, FolderKanban, Plus, Search, Target, Wallet } from "lucide-react";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from "@/components/ui/command";
-import { globalSearch, type SearchHit } from "@/features/search/actions";
+import { globalSearch } from "@/features/search/actions";
+import type { SearchHit } from "@/features/search/types";
 import { ALL_NAV } from "./nav";
 
 export type QuickAddKind = "task" | "event" | "note" | "expense" | "habit" | "project" | "goal";
 
 const ICON = { task: CheckSquare2, note: FileText, project: FolderKanban, goal: Target, habit: Flame, event: CalendarDays, transaction: Wallet } as const;
+const ALL_RESULTS = (q: string) => `/search?q=${encodeURIComponent(q.trim())}`;
 
 export function CommandPalette({ open, onOpenChange, onQuickAdd }: { open: boolean; onOpenChange: (o: boolean) => void; onQuickAdd: (k: QuickAddKind) => void }) {
   const router = useRouter();
@@ -42,8 +44,13 @@ export function CommandPalette({ open, onOpenChange, onQuickAdd }: { open: boole
       <CommandInput placeholder="Search tasks, notes, projects, goals… or type a command" value={q} onValueChange={setQ} />
       <CommandList>
         <CommandEmpty>{searching && state === "loading" ? "Searching…" : searching && state === "error" ? "Search failed. Check your connection and try again." : q.trim().length < 2 ? "Type at least 2 characters to search." : "No results."}</CommandEmpty>
+        {searching && (
+          <CommandGroup forceMount>
+            <CommandItem forceMount value={`__all__ ${q}`} onSelect={() => go(ALL_RESULTS(q))}><Search /><span className="truncate">Show all results for “{q.trim()}”</span><CommandShortcut>↵</CommandShortcut></CommandItem>
+          </CommandGroup>
+        )}
         {visibleHits.length > 0 && (
-          <CommandGroup heading="Results">
+          <CommandGroup forceMount heading="Results">
             {visibleHits.map((h) => {
               const Icon = ICON[h.kind];
               return <CommandItem key={`${h.kind}-${h.id}`} forceMount value={`${h.title} ${h.id}`} onSelect={() => go(h.href)}><Icon /><span className="truncate">{h.title}</span>{h.subtitle && <span className="ml-auto max-w-40 truncate text-xs text-muted-foreground">{h.subtitle}</span>}</CommandItem>;
