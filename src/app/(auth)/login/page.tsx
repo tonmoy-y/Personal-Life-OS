@@ -4,7 +4,7 @@ import { safeNext } from "@/lib/url";
 import { signIn } from "../actions";
 import { AuthForm } from "../auth-form";
 
-export const metadata: Metadata = { title: "Sign in" };
+export const metadata: Metadata = { title: "Sign in", robots: { index: false, follow: true } };
 
 export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const sp = await searchParams;

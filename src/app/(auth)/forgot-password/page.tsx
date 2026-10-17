@@ -3,7 +3,7 @@ import Link from "next/link";
 import { requestPasswordReset } from "../actions";
 import { AuthForm } from "../auth-form";
 
-export const metadata: Metadata = { title: "Reset password" };
+export const metadata: Metadata = { title: "Reset password", robots: { index: false, follow: false } };
 
 export default function ForgotPasswordPage() {
   return (

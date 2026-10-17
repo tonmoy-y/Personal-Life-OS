@@ -4,7 +4,7 @@ import { OnboardingForm } from "@/features/settings/onboarding-form";
 import { Logo } from "@/components/layout/logo";
 import { getSession } from "@/lib/session";
 
-export const metadata: Metadata = { title: "Welcome" };
+export const metadata: Metadata = { title: "Welcome", robots: { index: false, follow: false } };
 
 export const dynamic = "force-dynamic";
 

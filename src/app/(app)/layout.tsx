@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { AppearanceStyle } from "@/components/layout/appearance-style";
 import { AppShell } from "@/components/layout/app-shell";
 import { loadReminders } from "@/features/notifications/queries";
 import { getSession } from "@/lib/session";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 // Per-user data: never prerender or cache across users.
 export const dynamic = "force-dynamic";

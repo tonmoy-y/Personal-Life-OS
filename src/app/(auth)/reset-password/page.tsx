@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { updatePassword } from "../actions";
 import { AuthForm } from "../auth-form";
 
-export const metadata: Metadata = { title: "Choose a new password" };
+export const metadata: Metadata = { title: "Choose a new password", robots: { index: false, follow: false } };
 
 export default function ResetPasswordPage() {
   return (

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { signUp } from "../actions";
 import { AuthForm } from "../auth-form";
 
-export const metadata: Metadata = { title: "Create account" };
+export const metadata: Metadata = { title: "Create your free account", description: "Create a free Life OS account to keep your tasks, calendar, habits, goals, notes and money in one private workspace.", alternates: { canonical: "/signup" } };
 
 export default function SignupPage() {
   return (

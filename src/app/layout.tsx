@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { Geist_Mono, Instrument_Serif, Manrope } from "next/font/google";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -11,9 +12,12 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 const instrumentSerif = Instrument_Serif({ variable: "--font-instrument", subsets: ["latin"], weight: "400", style: ["normal", "italic"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Personal Life OS", template: "%s · Life OS" },
-  description: "A private workspace for your tasks, calendar, habits, goals, notes and money.",
-  applicationName: "Personal Life OS",
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_NAME, template: "%s · Life OS" },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: { type: "website", siteName: SITE_NAME, title: SITE_NAME, description: SITE_DESCRIPTION, url: "/", locale: "en_US" },
+  twitter: { card: "summary_large_image", title: SITE_NAME, description: SITE_DESCRIPTION },
   appleWebApp: { capable: true, title: "Life OS", statusBarStyle: "default" },
   formatDetection: { telephone: false },
 };

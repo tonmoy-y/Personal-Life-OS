@@ -1,8 +1,34 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, BarChart3, CalendarDays, Check, Flame, LayoutDashboard, ListChecks, NotebookText, ShieldCheck, Target, Wallet } from "lucide-react";
 import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
+
+const TITLE = "Personal Life OS: Private Tasks, Habits, Goals & Money Tracker";
+export const metadata: Metadata = {
+  title: { absolute: TITLE },
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: { type: "website", siteName: SITE_NAME, title: TITLE, description: SITE_DESCRIPTION, url: "/" },
+  twitter: { card: "summary_large_image", title: TITLE, description: SITE_DESCRIPTION },
+};
+
+// Structured data for search engines (a data block, not executable script).
+const JSON_LD = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: SITE_NAME,
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  applicationCategory: "ProductivityApplication",
+  operatingSystem: "Any (web browser)",
+  isAccessibleForFree: true,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  license: "https://opensource.org/licenses/MIT",
+  sameAs: ["https://github.com/tonmoy-y/Personal-Life-OS"],
+}).replace(/</g, "\\u003c");
 
 // Depends on the visitor's session (header buttons), so never prerender.
 export const dynamic = "force-dynamic";
@@ -83,6 +109,7 @@ export default async function Home() {
   const signedIn = await isSignedIn();
   return (
     <div className="min-h-dvh overflow-x-clip">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON_LD }} />
       <header className="sticky top-0 z-40 border-b border-transparent bg-background/70 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
           <Link href="/" aria-label="Life OS home"><Logo /></Link>

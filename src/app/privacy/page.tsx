@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Logo } from "@/components/layout/logo";
 
-export const metadata: Metadata = { title: "Privacy notice" };
+export const metadata: Metadata = { title: "Privacy notice", description: "How Life OS stores your data, what it never collects, and how to export or delete everything.", alternates: { canonical: "/privacy" } };
 
 export default function PrivacyPage() {
   return (
