@@ -68,6 +68,11 @@ export function FinanceView({ filters, transactions, trendTxns, budgets, otherCu
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
+      {filters.q && (
+        <p role="status" className="rounded-xl border border-primary/30 bg-primary/5 p-3 text-sm">
+          Showing matches for “{filters.q}” from <strong>all dates</strong>. Clear the search box to go back to {filters.rangeMode ? "your date range" : "the selected month"}.
+        </p>
+      )}
       {otherCurrencyCount > 0 && (
         <p role="note" className="rounded-xl border border-warning/40 bg-warning/10 p-3 text-sm">
           {otherCurrencyCount} transaction{otherCurrencyCount > 1 ? "s are" : " is"} recorded in a different currency than your current setting ({cur}) and {otherCurrencyCount > 1 ? "are" : "is"} excluded from these totals. Amounts are never converted.

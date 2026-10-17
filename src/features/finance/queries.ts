@@ -36,12 +36,14 @@ export function parseFinanceFilters(sp: Record<string, string | string[] | undef
 }
 
 export async function loadFinance(supabase: SupabaseClient, currency: string, f: FinanceFilters) {
-  let tq = supabase.from("transactions").select("*").eq("currency", currency).gte("occurred_on", f.from).lte("occurred_on", f.to);
+  let tq = supabase.from("transactions").select("*").eq("currency", currency);
+  // A search looks through every date; otherwise the list is limited to the selected month or range.
+  if (!f.q) tq = tq.gte("occurred_on", f.from).lte("occurred_on", f.to);
   if (f.type) tq = tq.eq("type", f.type);
   if (f.category) tq = tq.ilike("category", f.category.replace(/[%_\\]/g, ""));
   if (f.q) {
     const p = likePattern(f.q);
-    tq = tq.or(`description.ilike."${p}",category.ilike."${p}"`);
+    tq = tq.or(`description.ilike."${p}",category.ilike."${p}",payment_method.ilike."${p}"`);
   }
   const trendFrom = addMonths(monthStart(f.rangeMode ? f.to : f.month), -5);
   const [tx, trend, bud, other, cats] = await Promise.all([

@@ -1,14 +1,14 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDays, CheckSquare2, FileText, Flame, FolderKanban, Plus, Search, Target } from "lucide-react";
+import { CalendarDays, CheckSquare2, FileText, Flame, FolderKanban, Plus, Search, Target, Wallet } from "lucide-react";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from "@/components/ui/command";
 import { globalSearch, type SearchHit } from "@/features/search/actions";
 import { ALL_NAV } from "./nav";
 
 export type QuickAddKind = "task" | "event" | "note" | "expense" | "habit" | "project" | "goal";
 
-const ICON = { task: CheckSquare2, note: FileText, project: FolderKanban, goal: Target, habit: Flame, event: CalendarDays } as const;
+const ICON = { task: CheckSquare2, note: FileText, project: FolderKanban, goal: Target, habit: Flame, event: CalendarDays, transaction: Wallet } as const;
 
 export function CommandPalette({ open, onOpenChange, onQuickAdd }: { open: boolean; onOpenChange: (o: boolean) => void; onQuickAdd: (k: QuickAddKind) => void }) {
   const router = useRouter();

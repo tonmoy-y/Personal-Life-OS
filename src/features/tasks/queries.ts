@@ -1,7 +1,7 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { nowTimeIn, todayIn } from "@/lib/dates";
-import { likePattern } from "@/lib/like";
+import { likePattern, tagClause } from "@/lib/like";
 import type { Task } from "@/types/db";
 import { TASK_SORTS, TASK_VIEWS, type TaskFilters, type TaskSort, type TaskView } from "./schema";
 
@@ -43,7 +43,7 @@ export async function listTasks(supabase: SupabaseClient, tz: string, f: TaskFil
   }
   if (f.q) {
     const p = likePattern(f.q);
-    q = q.or(`title.ilike."${p}",description.ilike."${p}"`);
+    q = q.or(`title.ilike."${p}",description.ilike."${p}"${tagClause(f.q)}`);
   }
   if (f.priority) q = q.eq("priority", f.priority);
   if (f.status && f.view !== "completed") q = q.eq("status", f.status);
