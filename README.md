@@ -96,7 +96,7 @@ No service-role key is used anywhere. Account deletion uses the `delete_my_accou
 ## Hosting notes
 
 - `vercel.json` pins functions to `bom1` (Mumbai) so they sit next to a Supabase project in `ap-south-1`. Change it to the region closest to your own Supabase project.
-- `next.config.ts` sets a Content-Security-Policy limited to this origin and your Supabase project (plus Cloudflare's analytics beacon when proxied by Cloudflare), HSTS, frame, referrer and permissions headers.
+- `src/proxy.ts` sets a per-request nonce Content-Security-Policy (scripts need the nonce, so there is no script `unsafe-inline`), limited to this origin and your Supabase project, plus Cloudflare's analytics beacon when proxied by Cloudflare. `next.config.ts` adds HSTS, frame, referrer and permissions headers.
 
 ## Tests
 
