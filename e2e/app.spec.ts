@@ -164,6 +164,22 @@ test("no serious accessibility violations on key pages (light + dark)", async ({
   }
 });
 
+test("CSP is nonce-based (no script unsafe-inline) and blocks nothing the app needs", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
+  page.on("pageerror", (e) => errors.push(e.message));
+  const res = await page.goto("/login", { waitUntil: "networkidle" });
+  const csp = res?.headers()["content-security-policy"] ?? "";
+  const scriptSrc = csp.split(";").map((d) => d.trim()).find((d) => d.startsWith("script-src")) ?? "";
+  expect(scriptSrc).toMatch(/'nonce-[^']+'/);
+  expect(scriptSrc).not.toContain("'unsafe-inline'");
+  for (const path of ["/", "/signup", "/privacy", "/forgot-password"]) await page.goto(path, { waitUntil: "networkidle" });
+  await signIn(page, userA);
+  await page.waitForURL(/dashboard|today/);
+  for (const path of ["/dashboard", "/calendar", "/tasks", "/notes", "/settings"]) await page.goto(path, { waitUntil: "networkidle" });
+  expect(errors.filter((e) => !e.includes("ERR_SSL_PROTOCOL"))).toEqual([]);
+});
+
 test("user B cannot see user A's data", async ({ page }) => {
   await signIn(page, userB);
   await page.waitForURL(/\/onboarding/);

@@ -1,27 +1,7 @@
 import type { NextConfig } from "next";
 
-const isProd = process.env.NODE_ENV === "production";
-const supabaseOrigin = (() => { try { return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").origin; } catch { return ""; } })();
-const supabaseWs = supabaseOrigin.replace(/^https:/, "wss:");
-
-// Next injects small inline bootstrap scripts, so script-src keeps 'unsafe-inline' (no nonce pipeline); everything
-// else is locked to same-origin plus the one Supabase project. Dev additionally needs eval for React refresh.
-const csp = [
-  "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com${isProd ? "" : " 'unsafe-eval'"}`,
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
-  "font-src 'self' data:",
-  `connect-src 'self' ${supabaseOrigin} ${supabaseWs} https://cloudflareinsights.com${isProd ? "" : " ws://localhost:* http://localhost:*"}`.trim(),
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "frame-ancestors 'none'",
-  ...(isProd ? ["upgrade-insecure-requests"] : []),
-].join("; ");
-
+// Content-Security-Policy is set per request in src/proxy.ts (it carries a nonce).
 const securityHeaders = [
-  { key: "Content-Security-Policy", value: csp },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
   { key: "X-Permitted-Cross-Domain-Policies", value: "none" },
   { key: "X-Content-Type-Options", value: "nosniff" },

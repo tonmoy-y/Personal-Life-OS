@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { Geist_Mono, Instrument_Serif, Manrope } from "next/font/google";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -26,11 +27,13 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  // Reading the request nonce also makes every page dynamic, which nonce-based CSP requires.
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <html lang="en" suppressHydrationWarning className={`${manrope.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full`}>
       <body className="min-h-full">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider nonce={nonce} attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
           <Toaster richColors closeButton position="bottom-right" />
         </ThemeProvider>
