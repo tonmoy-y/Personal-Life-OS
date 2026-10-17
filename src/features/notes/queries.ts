@@ -1,6 +1,6 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { likePattern } from "@/features/tasks/queries";
+import { likePattern } from "@/lib/like";
 import type { Note } from "@/types/db";
 
 export async function listNotes(supabase: SupabaseClient, opts: { q?: string; tag?: string; archived?: boolean }): Promise<Note[]> {

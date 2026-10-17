@@ -1,6 +1,7 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { nowTimeIn, todayIn } from "@/lib/dates";
+import { likePattern } from "@/lib/like";
 import type { Task } from "@/types/db";
 import { TASK_SORTS, TASK_VIEWS, type TaskFilters, type TaskSort, type TaskView } from "./schema";
 
@@ -19,11 +20,6 @@ export function parseTaskFilters(sp: Record<string, string | string[] | undefine
     category: first(sp.category)?.slice(0, 60) || undefined,
     tag: first(sp.tag)?.slice(0, 30) || undefined,
   };
-}
-
-/** Build a safe `%term%` pattern for PostgREST `ilike` inside `or()`: strips wildcards and filter-syntax characters. */
-export function likePattern(q: string): string {
-  return `%${q.replace(/[\\%_,()"*:]/g, " ").trim()}%`;
 }
 
 export async function listTasks(supabase: SupabaseClient, tz: string, f: TaskFilters, limit = 300): Promise<Task[]> {
