@@ -77,7 +77,7 @@ No service-role key is used anywhere. Account deletion uses the `delete_my_accou
 4. **Authentication → Email Templates**: point links at the token-hash route so they work across devices:
    - Confirm signup: `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/onboarding`
    - Reset password: `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password`
-5. Supabase's built-in email sender is heavily rate-limited — configure a custom SMTP provider for real use.
+5. Supabase's built-in email sender is heavily rate-limited, so configure a custom SMTP provider for real use. The live app uses [Resend](https://resend.com) (free plan: about 100 emails per day). When Supabase or the provider refuses to send, sign-up and password reset show "We're sending a lot of emails right now. Please try again after some time." In Supabase, **Authentication → Rate Limits → emails sent per hour** can be lowered (for example to 4) so a free daily cap is never exceeded.
 
 ## Database & security model
 
