@@ -2,7 +2,7 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { addMonths, isLocalDate, monthEnd, monthStart, todayIn, type LocalDate } from "@/lib/dates";
 import type { Budget, Transaction } from "@/types/db";
-import { likePattern } from "@/features/tasks/queries";
+import { likePattern } from "@/lib/like";
 
 export interface FinanceFilters {
   /** First day of the selected month (month mode) */

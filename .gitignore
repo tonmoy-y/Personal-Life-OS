@@ -46,3 +46,8 @@ next-env.d.ts
 
 # local tooling (not part of the app)
 /.mcp.json
+
+# AI tooling (local only)
+/.agents/
+/.claude/
+/skills-lock.json

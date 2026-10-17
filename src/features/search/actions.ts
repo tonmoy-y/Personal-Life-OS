@@ -1,6 +1,6 @@
 "use server";
 import { run, type ActionResult } from "@/lib/action";
-import { likePattern } from "@/features/tasks/queries";
+import { likePattern } from "@/lib/like";
 
 export interface SearchHit {
   id: string;

@@ -1,5 +1,10 @@
 # Personal Life OS
 
+[![CI](https://github.com/tonmoy-y/Personal-Life-OS/actions/workflows/ci.yml/badge.svg)](https://github.com/tonmoy-y/Personal-Life-OS/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+**Live app: [personallifeos.tonmoyy.dev](https://personallifeos.tonmoyy.dev)**
+
 A private, mobile-first workspace for one person's tasks, calendar, habits, goals, projects, notes and money. Built with Next.js 16 (App Router), TypeScript (strict), Tailwind v4, shadcn/ui, Supabase (Postgres, Auth, RLS) and Recharts. It runs entirely on free tiers: no paid plan, paid AI or third-party APIs are required.
 
 ## Features
@@ -18,6 +23,10 @@ A private, mobile-first workspace for one person's tasks, calendar, habits, goal
 | Settings & appearance | Accent colour (7), text size, density, corner style, 12/24-hour time, default calendar view, dashboard widgets, light/dark/system theme; all stored on your profile |
 | Utilities | Command palette (⌘K), global search, quick-add, keyboard shortcuts (`?`), JSON/CSV export, account deletion, onboarding, home page that adapts when you are signed in |
 
+## Stack
+
+Next.js 16 (App Router, Turbopack, typed routes, React Compiler), React 19, TypeScript (strict), Tailwind CSS v4, shadcn/ui, Supabase (Postgres, Auth, Row Level Security), Recharts, Zod, Vitest, Playwright. Hosted on Vercel.
+
 ## Honest limitations
 
 - **Reminders are in-app only.** Browser notifications (opt-in) fire only while the app is open in a tab. There is no email/SMS/push scheduler, so nothing is delivered when the app is closed.
@@ -28,6 +37,17 @@ A private, mobile-first workspace for one person's tasks, calendar, habits, goal
 ## Design
 
 Instrument Serif headings with Manrope body text (Geist Mono for code), warm paper tones, liquid-glass surfaces that work in light and dark, and accent colours applied from your saved preferences without a flash (`src/components/layout/appearance-style.tsx`).
+
+## Run your own copy
+
+This repository contains no secrets and no service-role key. To run your own instance you need your own free Supabase project and (optionally) your own Vercel project:
+
+1. Fork or clone the repo and create a Supabase project.
+2. Apply the SQL in `supabase/migrations/` in order (see *Supabase setup*).
+3. Put your project's URL and **publishable** key in `.env.local` (see `.env.example`).
+4. `npm run dev`, then deploy to Vercel with the same three variables. Change the region in `vercel.json` to match your Supabase region.
+
+The live instance above is my own deployment: it uses its own database, and accounts on it are separate from anything you run yourself.
 
 ## Local development
 
@@ -97,3 +117,9 @@ Settings → **Your data** downloads a full JSON export or per-list CSVs (own re
 ## Dev-only demo data
 
 `scripts/seed-dev.sql` seeds demo rows for one existing user, refuses to run unless `app.allow_dev_seed = on`, and is never run automatically or in production.
+
+## Contributing, security and license
+
+- Contributions are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md).
+- Found a vulnerability? Please read [SECURITY.md](SECURITY.md) and report it privately instead of opening a public issue.
+- Released under the [MIT License](LICENSE).
