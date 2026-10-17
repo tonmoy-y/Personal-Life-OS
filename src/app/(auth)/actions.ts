@@ -11,6 +11,11 @@ export interface AuthState { error?: string; message?: string; fields?: { email?
 const email = z.string().trim().toLowerCase().max(254).pipe(z.email("Enter a valid email address"));
 const password = z.string().min(8, "Use at least 8 characters").max(72, "Use at most 72 characters");
 
+/** At most 3 sign-up / reset emails per address per 12 hours (best-effort, per server instance; Supabase's own limits back it up). */
+const ADDR_MAX = 3;
+const ADDR_WINDOW_MS = 12 * 60 * 60_000;
+const ADDR_LIMITED = "We've already sent several emails to this address. Please check your inbox and spam folder, or try again after about 12 hours.";
+
 const EMAIL_BUSY = "We're sending a lot of emails right now. Please try again after some time.";
 
 /**
@@ -53,7 +58,8 @@ export async function signUp(_prev: AuthState, form: FormData): Promise<AuthStat
   const parsed = z.object({ email, password, name: z.string().trim().max(80).optional() }).safeParse({ email: form.get("email"), password: form.get("password"), name: form.get("name") || undefined });
   const fields = { email: String(form.get("email") ?? ""), name: String(form.get("name") ?? "") };
   if (!parsed.success) return { error: parsed.error.issues[0].message, fields };
-  if (!rateLimit(`signup:${await clientKey()}`, 5, 10 * 60_000) || !rateLimit(`signup:addr:${parsed.data.email}`, 3, 30 * 60_000)) return { error: "Too many sign-up attempts. Please try again later.", fields };
+  if (!rateLimit(`signup:${await clientKey()}`, 5, 10 * 60_000)) return { error: "Too many sign-up attempts. Please try again later.", fields };
+  if (!rateLimit(`signup:addr:${parsed.data.email}`, ADDR_MAX, ADDR_WINDOW_MS)) return { error: ADDR_LIMITED, fields };
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
@@ -69,7 +75,8 @@ export async function signUp(_prev: AuthState, form: FormData): Promise<AuthStat
 export async function requestPasswordReset(_prev: AuthState, form: FormData): Promise<AuthState> {
   const parsed = email.safeParse(form.get("email"));
   if (!parsed.success) return { error: "Enter a valid email address", fields: { email: String(form.get("email") ?? "") } };
-  if (!rateLimit(`reset:${await clientKey()}`, 5, 10 * 60_000) || !rateLimit(`reset:addr:${parsed.data}`, 3, 30 * 60_000)) return { error: "Too many requests. Please try again later.", fields: { email: parsed.data } };
+  if (!rateLimit(`reset:${await clientKey()}`, 5, 10 * 60_000)) return { error: "Too many requests. Please try again later.", fields: { email: parsed.data } };
+  if (!rateLimit(`reset:addr:${parsed.data}`, ADDR_MAX, ADDR_WINDOW_MS)) return { error: ADDR_LIMITED, fields: { email: parsed.data } };
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(parsed.data, { redirectTo: `${await origin()}/auth/confirm?next=/reset-password` });
   if (error && emailBusy(error)) return { error: EMAIL_BUSY, fields: { email: parsed.data } };
