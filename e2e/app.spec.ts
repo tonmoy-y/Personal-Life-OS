@@ -180,6 +180,26 @@ test("CSP is nonce-based (no script unsafe-inline) and blocks nothing the app ne
   expect(errors.filter((e) => !e.includes("ERR_SSL_PROTOCOL"))).toEqual([]);
 });
 
+test("toolbar controls (search, theme, account, quick add) open without crashing", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await signIn(page, userA);
+  await page.waitForURL(/dashboard|today/);
+  await page.getByRole("button", { name: /Search and commands/ }).click();
+  await expect(page.getByPlaceholder(/Search tasks/)).toBeVisible();
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Theme" }).click();
+  await expect(page.getByRole("menuitemradio", { name: "Dark" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Account menu" }).click();
+  await expect(page.getByRole("menuitem", { name: "Settings" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Add", exact: true }).first().click();
+  await page.getByRole("menuitem", { name: "Goal" }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
 test("user B cannot see user A's data", async ({ page }) => {
   await signIn(page, userB);
   await page.waitForURL(/\/onboarding/);

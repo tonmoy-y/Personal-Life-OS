@@ -46,7 +46,7 @@ export function CommandPalette({ open, onOpenChange, onQuickAdd }: { open: boole
           <CommandGroup heading="Results">
             {visibleHits.map((h) => {
               const Icon = ICON[h.kind];
-              return <CommandItem key={`${h.kind}-${h.id}`} value={`${h.title} ${h.id}`} onSelect={() => go(h.href)}><Icon /><span className="truncate">{h.title}</span>{h.subtitle && <span className="ml-auto max-w-40 truncate text-xs text-muted-foreground">{h.subtitle}</span>}</CommandItem>;
+              return <CommandItem key={`${h.kind}-${h.id}`} forceMount value={`${h.title} ${h.id}`} onSelect={() => go(h.href)}><Icon /><span className="truncate">{h.title}</span>{h.subtitle && <span className="ml-auto max-w-40 truncate text-xs text-muted-foreground">{h.subtitle}</span>}</CommandItem>;
             })}
           </CommandGroup>
         )}
