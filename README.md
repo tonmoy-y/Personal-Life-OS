@@ -29,7 +29,7 @@ A private, mobile-first workspace for one person's tasks, calendar, habits, goal
 
 Next.js 16 (App Router, Turbopack, typed routes, React Compiler), React 19, TypeScript (strict), Tailwind CSS v4, shadcn/ui, Supabase (Postgres, Auth, Row Level Security), Recharts, Zod, Vitest, Playwright. Hosted on Vercel.
 
-## Honest limitations
+## limitations
 
 - **Reminders are in-app only.** Browser notifications (opt-in) fire only while the app is open in a tab. There is no email/SMS/push scheduler, so nothing is delivered when the app is closed.
 - No Google Calendar sync. No offline sync (the manifest enables installing the app; it does not make it work offline).
